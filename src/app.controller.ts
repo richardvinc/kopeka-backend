@@ -1,18 +1,23 @@
-import { JwtAuthGuard } from '@libs/auth/guards/jwt-auth.guard';
+import { Public } from '@libs/auth/decorators/public.decorator';
+import { User } from '@libs/auth/decorators/user.decorator';
+import { FirebaseAuthGuard } from '@libs/auth/guards/firebase-auth.guard';
+import { IUserIdentity } from '@libs/auth/interfaces/user.interface';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 
 @Controller()
+@UseGuards(FirebaseAuthGuard)
 export class AppController {
   constructor() {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
-  getHello(): string {
+  getHello(@User() user: IUserIdentity): string {
+    console.log(user.uid);
     return 'Hello World!';
   }
 
-  @Get('non-jwt')
+  @Public()
+  @Get('non-auth')
   getHelloNonJwt(): string {
-    return 'Hello World non jwt!';
+    return 'Hello World non auth!';
   }
 }

@@ -8,4 +8,8 @@ export class AuthConfigService {
   get jwtSecret(): string {
     return this.configService.getOrThrow('JWT_SECRET');
   }
+
+  get jwtExpiry(): string {
+    return this.configService.getOrThrow('JWT_EXPIRY');
+  }
 }
