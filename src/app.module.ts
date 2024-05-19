@@ -1,5 +1,6 @@
 import { AuthModule } from '@libs/auth/auth.module';
 import appConfig from '@libs/config/app/app-config';
+import { DatabaseModule } from '@libs/database/database.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
@@ -12,6 +13,7 @@ import { AppController } from './app.controller';
       load: [appConfig],
     }),
     AuthModule,
+    DatabaseModule,
   ],
   controllers: [AppController],
 })
