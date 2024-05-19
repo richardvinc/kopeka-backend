@@ -11,6 +11,7 @@ import { AppController } from './app.controller';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig],
+      cache: true,
     }),
     AuthModule,
     DatabaseModule,
