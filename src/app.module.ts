@@ -1,4 +1,5 @@
 import { classes } from '@automapper/classes';
+import { CamelCaseNamingConvention } from '@automapper/core';
 import { AutomapperModule } from '@automapper/nestjs';
 import { AuthModule } from '@libs/auth/auth.module';
 import appConfig from '@libs/config/app/app-config';
@@ -14,6 +15,7 @@ import { AppController } from './app.controller';
   imports: [
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
+      namingConventions: new CamelCaseNamingConvention(),
     }),
     ConfigModule.forRoot({
       isGlobal: true,

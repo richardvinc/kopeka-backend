@@ -1,19 +1,19 @@
 import { randomUUID } from 'crypto';
 
-export class BaseDomain<T> {
-  _id: string;
-  _props: T;
+import { AutoMap } from '@automapper/classes';
 
-  constructor(props: T, id?: string) {
-    this._id = id ?? randomUUID();
-    this._props = props;
-  }
+export class BaseDomain {
+  @AutoMap()
+  readonly id: string;
+  @AutoMap()
+  createdAt?: Date;
+  @AutoMap()
+  updatedAt?: Date;
+  @AutoMap()
+  deletedAt?: Date;
 
-  public get id() {
-    return this._id;
-  }
-
-  public get props() {
-    return this._props;
+  constructor(id?: string) {
+    this.id = id ?? randomUUID();
+    this.createdAt = new Date();
   }
 }

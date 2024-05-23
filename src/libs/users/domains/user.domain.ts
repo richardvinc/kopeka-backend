@@ -1,3 +1,4 @@
+import { AutoMap } from '@automapper/classes';
 import { BaseDomain } from '@libs/shared/domains/base-domain';
 
 interface UserProps {
@@ -5,27 +6,39 @@ interface UserProps {
   firebaseUid: string;
   profilePictureUrl: string;
   isActive: boolean;
-  fcmToken?: string | undefined;
-  createdAt?: Date | undefined;
-  updatedAt?: Date | undefined;
-  deletedAt?: Date | undefined;
+  fcmToken?: string;
 }
 
-type UserOptionalProps = Partial<Pick<UserProps, 'fcmToken'>>;
+type UpdateableProps = Partial<
+  Pick<UserProps, 'fcmToken' | 'profilePictureUrl' | 'isActive'>
+>;
 
-export class User extends BaseDomain<UserProps> {
+export class User extends BaseDomain {
+  @AutoMap()
+  username: string;
+
+  @AutoMap()
+  firebaseUid: string;
+
+  @AutoMap()
+  profilePictureUrl: string;
+
+  @AutoMap()
+  isActive: boolean;
+
+  @AutoMap()
+  fcmToken?: string | undefined;
+
   constructor(props: UserProps, id?: string) {
-    super({ ...props, createdAt: new Date() }, id);
+    super(id);
+    Object.assign(this, { ...props });
   }
 
-  static create(props: UserProps, id?: string): User {
+  public static create(props: UserProps, id?: string) {
     return new User(props, id);
   }
 
-  update(props: UserOptionalProps): User {
-    return User.create(
-      { ...this._props, ...props, updatedAt: new Date() },
-      this._id,
-    );
+  update(props: UpdateableProps) {
+    Object.assign(this, { ...this, ...props, updatedAt: new Date() });
   }
 }

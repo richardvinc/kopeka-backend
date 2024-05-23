@@ -1,7 +1,6 @@
 import { FirebaseAuthGuard } from '@libs/auth/guards/firebase-auth.guard';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 
-import { UserEntity } from './entities/user.entity';
 import { CreateUserDto } from './use-cases/create-user/create-user.dto';
 import { CreateUserUseCase } from './use-cases/create-user/create-user.use-case';
 import { FindUserByIdDTO } from './use-cases/find-user-by-id/find-user-by-id.dto';
@@ -19,19 +18,17 @@ export class UserController {
   ) {}
 
   @Get('/id/:id')
-  async findOneById(@Param() dto: FindUserByIdDTO): Promise<UserEntity> {
+  async findOneById(@Param() dto: FindUserByIdDTO) {
     return await this.findUserByIdUseCase.execute(dto);
   }
 
   @Get('/username/:username')
-  async findOneByUsername(
-    @Param() dto: FindUserByUsernameDTO,
-  ): Promise<UserEntity> {
+  async findOneByUsername(@Param() dto: FindUserByUsernameDTO) {
     return await this.findUserByUsernameUseCase.execute(dto);
   }
 
   @Post()
-  async create(@Body() dto: CreateUserDto): Promise<UserEntity> {
+  async create(@Body() dto: CreateUserDto) {
     return await this.createUserUseCase.execute(dto);
   }
 }

@@ -4,15 +4,15 @@ import {
   IsOptional,
   IsString,
   IsUrl,
-  Max,
-  Min,
+  MaxLength,
+  MinLength,
 } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
-  @Min(5)
-  @Max(20)
+  @MinLength(5)
+  @MaxLength(20)
   username: string;
 
   @IsString()
