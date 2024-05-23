@@ -11,8 +11,7 @@ export class AppController {
 
   @Get()
   getHello(@User() user: IUserIdentity): string {
-    console.log(user.uid);
-    return 'Hello World!';
+    return `Hello World, ${user.uid}!`;
   }
 
   @Public()
