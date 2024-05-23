@@ -5,7 +5,6 @@ export interface HttpErrorResponse {
     error_code: string;
     message?: any;
     error_date?: string;
-    http_status_code?: number;
   };
 }
 

@@ -1,22 +1,22 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 import slugify from 'slugify';
 
 import { HttpErrorResponse } from '@libs/shared/interfaces';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-export abstract class BaseAuthError extends HttpException {
+export abstract class BaseDomainError extends HttpException {
   constructor(
+    readonly domain: string,
     readonly description: string,
     readonly cause: Error,
   ) {
-    super('', HttpStatus.UNAUTHORIZED);
+    super('', HttpStatus.BAD_REQUEST);
   }
 
   getResponse(): HttpErrorResponse {
     return {
       ok: false,
       error: {
-        error_code: `auth/${slugify(this.description, {
+        error_code: `${this.domain}/${slugify(this.description, {
           replacement: '-',
           lower: true,
         })}`,
@@ -25,22 +25,8 @@ export abstract class BaseAuthError extends HttpException {
             ? this.cause?.stack
             : undefined,
         error_date: new Date().toISOString(),
-        result_type: 'Authorization Error',
+        result_type: 'Domain Error',
       },
     };
-  }
-}
-
-export namespace AuthErrors {
-  export class InvalidToken extends BaseAuthError {
-    constructor(cause: Error) {
-      super('Invalid token', cause);
-    }
-  }
-
-  export class UserNotFound extends BaseAuthError {
-    constructor(cause: Error) {
-      super('User not found', cause);
-    }
   }
 }
