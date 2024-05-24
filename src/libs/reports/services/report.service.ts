@@ -22,7 +22,7 @@ export interface GetLatestReportsFilter {
   excludedReportIds?: string[];
   userId?: string;
   limit?: number;
-  nextToken?: string;
+  nextToken?: number;
 }
 
 @Injectable()
@@ -64,10 +64,10 @@ export class ReportService {
     const { excludedReportIds, userId, limit, nextToken } = filter;
 
     const qb = await this.reportRepository.createQueryBuilder('report');
-    qb.orderBy('report.createdAt', 'DESC');
+    qb.orderBy('report.rowId', 'DESC');
 
     if (nextToken) {
-      qb.where('report.createdAt < :nextToken', { nextToken });
+      qb.andWhere('report.rowId < :nextToken', { nextToken });
     }
 
     if (excludedReportIds?.length) {

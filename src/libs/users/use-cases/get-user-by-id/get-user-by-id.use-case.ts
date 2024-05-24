@@ -28,6 +28,6 @@ export class GetUserByIdUseCase extends BaseUseCase<
     const user = await this.userRepository.findOneBy({ id: dto.id });
     if (!user) throw new UserError.UserNotFound();
 
-    return new BaseResult(this.mapper.map(user, UserEntity, UserPresenterDTO));
+    return this.ok(this.mapper.map(user, UserEntity, UserPresenterDTO));
   }
 }

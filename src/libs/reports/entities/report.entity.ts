@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Generated,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -65,6 +66,11 @@ export class ReportEntity {
   @DeleteDateColumn({ name: 'deleted_at' })
   @AutoMap()
   deletedAt: Date;
+
+  @Column({ name: 'row_id' })
+  @Generated('increment')
+  @AutoMap()
+  rowId: number;
 
   @VirtualColumn()
   @AutoMap()

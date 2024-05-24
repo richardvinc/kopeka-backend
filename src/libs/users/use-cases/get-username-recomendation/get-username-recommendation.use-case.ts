@@ -54,6 +54,6 @@ export class GetUsernameRecommendationUseCase extends BaseUseCase<
       )
       .flat();
 
-    return new BaseResult(recommendations);
+    return this.ok(recommendations);
   }
 }

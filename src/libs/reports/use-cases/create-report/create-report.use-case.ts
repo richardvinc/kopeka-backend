@@ -44,7 +44,7 @@ export class CreateReportUseCase extends BaseUseCase<
 
     const createdReport = await this.reportService.createReport(report);
 
-    return new BaseResult(
+    return this.ok(
       this.mapper.map(createdReport, ReportDomain, ReportPresenterDTO),
     );
   }

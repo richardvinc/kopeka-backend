@@ -56,8 +56,6 @@ export class CreateUserUseCase extends BaseUseCase<
       this.mapper.map(user, UserDomain, UserEntity),
     );
 
-    return new BaseResult(
-      this.mapper.map(userCreated, UserEntity, UserPresenterDTO),
-    );
+    return this.ok(this.mapper.map(userCreated, UserEntity, UserPresenterDTO));
   }
 }

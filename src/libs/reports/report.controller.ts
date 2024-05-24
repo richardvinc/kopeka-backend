@@ -1,10 +1,20 @@
 import { User } from '@libs/auth/decorators/user.decorator';
 import { FirebaseAuthGuard } from '@libs/auth/guards/firebase-auth.guard';
 import { IUserIdentity } from '@libs/auth/interfaces/user.interface';
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 
 import { CreateReportDTO } from './use-cases/create-report/create-report.dto';
 import { CreateReportUseCase } from './use-cases/create-report/create-report.use-case';
+import { GetLatestReportsDTO } from './use-cases/get-latest-reports/get-latest-reports.dto';
+import { GetLatestReportsUseCase } from './use-cases/get-latest-reports/get-latest-reports.use-case';
 import { GetNearbyReportDTO } from './use-cases/get-nearby-report/get-nearby-report.dto';
 import { GetNearbyReportUseCase } from './use-cases/get-nearby-report/get-nearby-report.use-case';
 import { GetReportByIdDTO } from './use-cases/get-report-by-id/get-report-by-id.dto';
@@ -20,6 +30,7 @@ export class ReportController {
     private getReportByIdUseCase: GetReportByIdUseCase,
     private getNearbyReportsUseCase: GetNearbyReportUseCase,
     private likeReportUseCase: LikeReportUseCase,
+    private getLatestReportsUseCase: GetLatestReportsUseCase,
   ) {}
 
   @Post()
@@ -39,6 +50,17 @@ export class ReportController {
     @Body() dto: GetNearbyReportDTO,
   ) {
     return await this.getNearbyReportsUseCase.execute({
+      ...dto,
+      userId: user.id,
+    });
+  }
+
+  @Get('/latest')
+  async getLatestReports(
+    @User() user: IUserIdentity,
+    @Query() dto: GetLatestReportsDTO,
+  ) {
+    return await this.getLatestReportsUseCase.execute({
       ...dto,
       userId: user.id,
     });

@@ -48,6 +48,9 @@ export class ReportDomain extends BaseDomain {
   condition: REPORT_CONDITION;
 
   @AutoMap()
+  rowId?: number;
+
+  @AutoMap()
   isReacted?: boolean;
 
   @AutoMap(() => UserDomain)

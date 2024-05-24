@@ -13,4 +13,20 @@ export abstract class BaseUseCase<TRequest, TResponse> {
     | BasePaginatedResult<TResponse>
     | Promise<void>
     | void;
+
+  protected ok(data: TResponse): BaseResult<TResponse> {
+    return {
+      data,
+    };
+  }
+
+  protected paginatedOk(
+    data: TResponse,
+    nextToken?: string,
+  ): BasePaginatedResult<TResponse> {
+    return {
+      data,
+      nextToken,
+    };
+  }
 }

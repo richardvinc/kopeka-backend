@@ -9,6 +9,7 @@ import { REPORT_SERVICE } from './report.constant';
 import { ReportController } from './report.controller';
 import { ReportService } from './services/report.service';
 import { CreateReportUseCase } from './use-cases/create-report/create-report.use-case';
+import { GetLatestReportsUseCase } from './use-cases/get-latest-reports/get-latest-reports.use-case';
 import { GetNearbyReportUseCase } from './use-cases/get-nearby-report/get-nearby-report.use-case';
 import { GetReportByIdUseCase } from './use-cases/get-report-by-id/get-report-by-id.use-case';
 import { LikeReportUseCase } from './use-cases/like-report/like-report.use-case';
@@ -18,6 +19,7 @@ const useCases = [
   GetNearbyReportUseCase,
   GetReportByIdUseCase,
   LikeReportUseCase,
+  GetLatestReportsUseCase,
 ];
 const mappers = [GPSLocationMapperProfile, ReportMapperProfile];
 const services: Provider[] = [

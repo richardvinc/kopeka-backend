@@ -29,6 +29,6 @@ export class GetSelfUseCase extends BaseUseCase<GetSelfDTO, UserPresenterDTO> {
       throw new UserError.UserNotFound();
     }
 
-    return new BaseResult(this.mapper.map(user, UserEntity, UserPresenterDTO));
+    return this.ok(this.mapper.map(user, UserEntity, UserPresenterDTO));
   }
 }

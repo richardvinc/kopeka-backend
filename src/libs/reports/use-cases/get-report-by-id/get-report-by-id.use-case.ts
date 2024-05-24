@@ -33,8 +33,6 @@ export class GetReportByIdUseCase extends BaseUseCase<
     );
     if (!report) throw new ReportError.ReportNotFound();
 
-    return new BaseResult(
-      this.mapper.map(report, ReportDomain, ReportPresenterDTO),
-    );
+    return this.ok(this.mapper.map(report, ReportDomain, ReportPresenterDTO));
   }
 }

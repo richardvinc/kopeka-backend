@@ -35,8 +35,6 @@ export class GetUserByUsernameUseCase extends BaseUseCase<
     });
     if (!user) throw new UserError.UserNotFound();
 
-    return new BaseResult(
-      this.mapper.map(user, UserEntity, UserPresenterMinimalDTO),
-    );
+    return this.ok(this.mapper.map(user, UserEntity, UserPresenterMinimalDTO));
   }
 }
