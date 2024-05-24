@@ -7,6 +7,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { ReportDomain } from '../domains/report.domain';
+import { ReportLikeEntity } from '../entities/report-like.entity';
 import { ReportEntity } from '../entities/report.entity';
 import { ReportError } from '../errors/report.error';
 
@@ -17,6 +18,13 @@ export interface GetNearbyReportsFilter {
   limit?: number;
 }
 
+export interface GetLatestReportsFilter {
+  excludedReportIds?: string[];
+  userId?: string;
+  limit?: number;
+  nextToken?: string;
+}
+
 @Injectable()
 export class ReportService {
   constructor(
@@ -24,12 +32,14 @@ export class ReportService {
     private mapper: Mapper,
     @InjectRepository(ReportEntity)
     private readonly reportRepository: Repository<ReportEntity>,
+    @InjectRepository(ReportLikeEntity)
+    private readonly reportLikeRepository: Repository<ReportLikeEntity>,
   ) {}
 
   async getReportById(
     reportId: string,
     userId?: string,
-  ): Promise<ReportDomain> {
+  ): Promise<ReportDomain | null> {
     const qb = await this.reportRepository.createQueryBuilder('report');
     qb.where('report.id = :id', { id: reportId });
 
@@ -46,6 +56,40 @@ export class ReportService {
     if (!report) throw new ReportError.ReportNotFound();
 
     return this.mapper.map(report, ReportEntity, ReportDomain);
+  }
+
+  async getLatestReports(
+    filter: GetLatestReportsFilter,
+  ): Promise<ReportDomain[]> {
+    const { excludedReportIds, userId, limit, nextToken } = filter;
+
+    const qb = await this.reportRepository.createQueryBuilder('report');
+    qb.orderBy('report.createdAt', 'DESC');
+
+    if (nextToken) {
+      qb.where('report.createdAt < :nextToken', { nextToken });
+    }
+
+    if (excludedReportIds?.length) {
+      qb.andWhere('report.id != IN(:...excludedReportIds)', {
+        excludedReportIds,
+      });
+    }
+
+    if (userId) {
+      qb.leftJoin('report.likes', 'like', 'like.userId = :userId', { userId });
+      qb.addSelect(
+        'CASE WHEN COUNT(like.report_id) > 0 THEN true ELSE false END',
+        'isReacted',
+      );
+      qb.groupBy('report.id');
+    }
+
+    qb.limit(limit ?? 10);
+
+    const reports = await qb.getMany();
+
+    return this.mapper.mapArray(reports, ReportEntity, ReportDomain);
   }
 
   async getNearbyReports(
@@ -74,5 +118,20 @@ export class ReportService {
     const reports = await qb.getMany();
 
     return this.mapper.mapArray(reports, ReportEntity, ReportDomain);
+  }
+
+  async likeReport(reportId: string, userId: string): Promise<void> {
+    await this.reportLikeRepository.save({
+      reportId,
+      userId,
+    });
+  }
+
+  async createReport(report: ReportDomain): Promise<ReportDomain> {
+    const savedReport = await this.reportRepository.save(
+      this.mapper.map(report, ReportDomain, ReportEntity),
+    );
+
+    return this.mapper.map(savedReport, ReportEntity, ReportDomain);
   }
 }

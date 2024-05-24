@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
+import { BaseResult } from '@libs/shared/presenters/result.presenter';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
 import { UserEntity } from '@libs/users/entities/user.entity';
 import { UserError } from '@libs/users/errors/user.error';
@@ -20,7 +21,7 @@ export class GetSelfUseCase extends BaseUseCase<GetSelfDTO, UserPresenterDTO> {
     super();
   }
 
-  async execute(dto: GetSelfDTO): Promise<UserPresenterDTO> {
+  async execute(dto: GetSelfDTO): Promise<BaseResult<UserPresenterDTO>> {
     const user = await this.userRepository.findOneBy({
       firebaseUid: dto.firebaseUid,
     });
@@ -28,6 +29,6 @@ export class GetSelfUseCase extends BaseUseCase<GetSelfDTO, UserPresenterDTO> {
       throw new UserError.UserNotFound();
     }
 
-    return this.mapper.map(user, UserEntity, UserPresenterDTO);
+    return new BaseResult(this.mapper.map(user, UserEntity, UserPresenterDTO));
   }
 }

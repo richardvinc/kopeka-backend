@@ -1,3 +1,4 @@
+import { BaseResult } from '@libs/shared/presenters/result.presenter';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
 
 import { GetUsernameRecommendationDTO } from './get-username-recommendation.dto';
@@ -6,7 +7,9 @@ export class GetUsernameRecommendationUseCase extends BaseUseCase<
   GetUsernameRecommendationDTO,
   string[]
 > {
-  async execute(dto: GetUsernameRecommendationDTO): Promise<string[]> {
+  async execute(
+    dto: GetUsernameRecommendationDTO,
+  ): Promise<BaseResult<string[]>> {
     const firstWords = ['happy', 'sad', 'angry', 'excited', 'bored'];
     const secondWords = [
       'cat',
@@ -51,6 +54,6 @@ export class GetUsernameRecommendationUseCase extends BaseUseCase<
       )
       .flat();
 
-    return recommendations;
+    return new BaseResult(recommendations);
   }
 }

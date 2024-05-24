@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
+import { BaseResult } from '@libs/shared/presenters/result.presenter';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
 import { UserDomain } from '@libs/users/domains/user.domain';
 import { UserEntity } from '@libs/users/entities/user.entity';
@@ -24,7 +25,7 @@ export class CreateUserUseCase extends BaseUseCase<
     super();
   }
 
-  async execute(dto: CreateUserDto): Promise<UserPresenterDTO> {
+  async execute(dto: CreateUserDto): Promise<BaseResult<UserPresenterDTO>> {
     // check if user already registered
     const userRegistered = await this.userRepository.findOne({
       where: {
@@ -55,6 +56,8 @@ export class CreateUserUseCase extends BaseUseCase<
       this.mapper.map(user, UserDomain, UserEntity),
     );
 
-    return this.mapper.map(userCreated, UserEntity, UserPresenterDTO);
+    return new BaseResult(
+      this.mapper.map(userCreated, UserEntity, UserPresenterDTO),
+    );
   }
 }

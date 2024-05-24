@@ -1,15 +1,15 @@
 import * as GeoHash from 'ngeohash';
-import { Repository } from 'typeorm';
 
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
+import { ReportService } from '@libs/reports/services/report.service';
+import { BaseResult } from '@libs/shared/presenters/result.presenter';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Inject } from '@nestjs/common';
 
 import { ReportDomain } from '../../domains/report.domain';
-import { ReportEntity } from '../../entities/report.entity';
 import { ReportPresenterDTO } from '../../presenters/report.presenter';
-import { GEOHASH_PRECISSION } from '../../report.constant';
+import { GEOHASH_PRECISSION, REPORT_SERVICE } from '../../report.constant';
 import { CreateReportDTO } from './create-report.dto';
 
 export class CreateReportUseCase extends BaseUseCase<
@@ -19,13 +19,13 @@ export class CreateReportUseCase extends BaseUseCase<
   constructor(
     @InjectMapper()
     private mapper: Mapper,
-    @InjectRepository(ReportEntity)
-    private reportRepository: Repository<ReportEntity>,
+    @Inject(REPORT_SERVICE)
+    private reportService: ReportService,
   ) {
     super();
   }
 
-  async execute(dto: CreateReportDTO): Promise<ReportPresenterDTO> {
+  async execute(dto: CreateReportDTO): Promise<BaseResult<ReportPresenterDTO>> {
     const geoHash: string = GeoHash.encode(
       dto.lat,
       dto.lon,
@@ -42,10 +42,10 @@ export class CreateReportUseCase extends BaseUseCase<
       },
     });
 
-    const createdReport = await this.reportRepository.save(
-      this.mapper.map(report, ReportDomain, ReportEntity),
-    );
+    const createdReport = await this.reportService.createReport(report);
 
-    return this.mapper.map(createdReport, ReportEntity, ReportPresenterDTO);
+    return new BaseResult(
+      this.mapper.map(createdReport, ReportDomain, ReportPresenterDTO),
+    );
   }
 }

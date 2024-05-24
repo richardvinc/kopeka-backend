@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
+import { BaseResult } from '@libs/shared/presenters/result.presenter';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
 import { UserPresenterDTO } from '@libs/users/presenters/user.presenter';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,10 +24,10 @@ export class GetUserByIdUseCase extends BaseUseCase<
     super();
   }
 
-  async execute(dto: GetUserByIdDTO): Promise<UserPresenterDTO> {
+  async execute(dto: GetUserByIdDTO): Promise<BaseResult<UserPresenterDTO>> {
     const user = await this.userRepository.findOneBy({ id: dto.id });
     if (!user) throw new UserError.UserNotFound();
 
-    return this.mapper.map(user, UserEntity, UserPresenterDTO);
+    return new BaseResult(this.mapper.map(user, UserEntity, UserPresenterDTO));
   }
 }

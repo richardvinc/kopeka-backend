@@ -9,6 +9,8 @@ import { GetNearbyReportDTO } from './use-cases/get-nearby-report/get-nearby-rep
 import { GetNearbyReportUseCase } from './use-cases/get-nearby-report/get-nearby-report.use-case';
 import { GetReportByIdDTO } from './use-cases/get-report-by-id/get-report-by-id.dto';
 import { GetReportByIdUseCase } from './use-cases/get-report-by-id/get-report-by-id.use-case';
+import { LikeReportDTO } from './use-cases/like-report/like-report.dto';
+import { LikeReportUseCase } from './use-cases/like-report/like-report.use-case';
 
 @UseGuards(FirebaseAuthGuard)
 @Controller('reports')
@@ -17,6 +19,7 @@ export class ReportController {
     private createReportUseCase: CreateReportUseCase,
     private getReportByIdUseCase: GetReportByIdUseCase,
     private getNearbyReportsUseCase: GetNearbyReportUseCase,
+    private likeReportUseCase: LikeReportUseCase,
   ) {}
 
   @Post()
@@ -24,17 +27,9 @@ export class ReportController {
     @User() user: IUserIdentity,
     @Body() dto: CreateReportDTO,
   ) {
-    return this.createReportUseCase.execute({ ...dto, reportedById: user.id });
-  }
-
-  @Get('/id/:reportId')
-  async getReportById(
-    @User() user: IUserIdentity,
-    @Param() dto: GetReportByIdDTO,
-  ) {
-    return this.getReportByIdUseCase.execute({
+    return await this.createReportUseCase.execute({
       ...dto,
-      userId: user.id,
+      reportedById: user.id,
     });
   }
 
@@ -43,6 +38,25 @@ export class ReportController {
     @User() user: IUserIdentity,
     @Body() dto: GetNearbyReportDTO,
   ) {
-    return this.getNearbyReportsUseCase.execute({ ...dto, userId: user.id });
+    return await this.getNearbyReportsUseCase.execute({
+      ...dto,
+      userId: user.id,
+    });
+  }
+
+  @Get('/:reportId')
+  async getReportById(
+    @User() user: IUserIdentity,
+    @Param() dto: GetReportByIdDTO,
+  ) {
+    return await this.getReportByIdUseCase.execute({
+      ...dto,
+      userId: user.id,
+    });
+  }
+
+  @Post('/:reportId/like')
+  async likeReport(@User() user: IUserIdentity, @Param() dto: LikeReportDTO) {
+    return await this.likeReportUseCase.execute({ ...dto, userId: user.id });
   }
 }

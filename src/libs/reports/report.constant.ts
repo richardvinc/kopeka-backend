@@ -1,3 +1,5 @@
+export const REPORT_SERVICE = 'REPORT_SERVICE';
+
 export enum REPORT_CONDITION {
   GOOD = 'GOOD',
   BAD = 'BAD',
