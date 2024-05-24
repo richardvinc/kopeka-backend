@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
-import { User } from '@libs/users/domains/user.domain';
+import { UserDomain } from '@libs/users/domains/user.domain';
 import { UserEntity } from '@libs/users/entities/user.entity';
 import { UserError } from '@libs/users/errors/user.error';
 import { UserPresenterDTO } from '@libs/users/presenters/user.presenter';
@@ -46,13 +46,13 @@ export class CreateUserUseCase extends BaseUseCase<
       throw new UserError.UserAlreadyExists();
     }
 
-    const user = User.create({
+    const user = UserDomain.create({
       ...dto,
       isActive: true,
     });
 
     const userCreated = await this.userRepository.save(
-      this.mapper.map(user, User, UserEntity),
+      this.mapper.map(user, UserDomain, UserEntity),
     );
 
     return this.mapper.map(userCreated, UserEntity, UserPresenterDTO);

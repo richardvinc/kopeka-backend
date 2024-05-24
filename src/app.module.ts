@@ -4,6 +4,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { AuthModule } from '@libs/auth/auth.module';
 import appConfig from '@libs/config/app/app-config';
 import { DatabaseModule } from '@libs/database/database.module';
+import { ReportModule } from '@libs/reports/report.module';
 import { UserModule } from '@libs/users/user.module';
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -25,6 +26,7 @@ import { AppController } from './app.controller';
     AuthModule,
     DatabaseModule,
     UserModule,
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [

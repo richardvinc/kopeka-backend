@@ -6,8 +6,8 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 
 export abstract class BaseAuthError extends HttpException {
   constructor(
-    readonly description: string,
     readonly cause: Error,
+    readonly description?: string,
   ) {
     super('', HttpStatus.UNAUTHORIZED);
   }
@@ -16,7 +16,7 @@ export abstract class BaseAuthError extends HttpException {
     return {
       ok: false,
       error: {
-        error_code: `auth/${slugify(this.description, {
+        error_code: `auth/${slugify(this.description ?? this.cause.message, {
           replacement: '-',
           lower: true,
         })}`,
@@ -34,13 +34,13 @@ export abstract class BaseAuthError extends HttpException {
 export namespace AuthErrors {
   export class InvalidToken extends BaseAuthError {
     constructor(cause: Error) {
-      super('Invalid token', cause);
+      super(cause, 'Invalid token');
     }
   }
 
   export class UserNotFound extends BaseAuthError {
-    constructor(cause: Error) {
-      super('User not found', cause);
+    constructor() {
+      super(new Error('User not found'));
     }
   }
 }

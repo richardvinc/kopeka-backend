@@ -3,11 +3,14 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { AutoMap } from '@automapper/classes';
+import { ReportEntity } from '@libs/reports/entities/report.entity';
 
 @Entity()
 export class UserEntity {
@@ -46,4 +49,8 @@ export class UserEntity {
   @DeleteDateColumn({ name: 'deleted_at' })
   @AutoMap()
   deletedAt: Date;
+
+  @OneToMany(() => ReportEntity, (report) => report.user)
+  @JoinColumn({ name: 'id', referencedColumnName: 'reportedById' })
+  reports: ReportEntity[];
 }

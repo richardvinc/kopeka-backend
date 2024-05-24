@@ -11,7 +11,7 @@ export class AppController {
 
   @Get()
   getHello(@User() user: IUserIdentity): string {
-    return `Hello World, ${user.uid}!`;
+    return `Hello World, ${user.firebaseUid}!`;
   }
 
   @Public()

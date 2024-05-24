@@ -13,7 +13,7 @@ type UpdateableProps = Partial<
   Pick<UserProps, 'fcmToken' | 'profilePictureUrl' | 'isActive'>
 >;
 
-export class User extends BaseDomain {
+export class UserDomain extends BaseDomain {
   @AutoMap()
   username: string;
 
@@ -35,7 +35,7 @@ export class User extends BaseDomain {
   }
 
   public static create(props: UserProps, id?: string) {
-    return new User(props, id);
+    return new UserDomain(props, id);
   }
 
   update(props: UpdateableProps) {

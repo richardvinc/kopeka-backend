@@ -27,7 +27,7 @@ export class UserController {
   @Get('/self')
   async getSelf(@User() user: IUserIdentity) {
     return await this.getSelfUseCase.execute({
-      firebaseUid: user.uid,
+      firebaseUid: user.firebaseUid,
     });
   }
 
@@ -50,7 +50,7 @@ export class UserController {
   async createUser(@User() user: IUserIdentity, @Body() dto: CreateUserDto) {
     return await this.createUserUseCase.execute({
       ...dto,
-      firebaseUid: user.uid,
+      firebaseUid: user.firebaseUid,
     });
   }
 }
