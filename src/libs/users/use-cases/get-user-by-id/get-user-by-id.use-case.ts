@@ -8,10 +8,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { UserEntity } from '../../entities/user.entity';
 import { UserError } from '../../errors/user.error';
-import { FindUserByIdDTO } from './find-user-by-id.dto';
+import { GetUserByIdDTO } from './get-user-by-id.dto';
 
-export class FindUserByIdUseCase extends BaseUseCase<
-  FindUserByIdDTO,
+export class GetUserByIdUseCase extends BaseUseCase<
+  GetUserByIdDTO,
   UserPresenterDTO
 > {
   constructor(
@@ -23,7 +23,7 @@ export class FindUserByIdUseCase extends BaseUseCase<
     super();
   }
 
-  async execute(dto: FindUserByIdDTO): Promise<UserPresenterDTO> {
+  async execute(dto: GetUserByIdDTO): Promise<UserPresenterDTO> {
     const user = await this.userRepository.findOneBy({ id: dto.id });
     if (!user) throw new UserError.UserNotFound();
 

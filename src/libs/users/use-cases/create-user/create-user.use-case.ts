@@ -5,6 +5,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
 import { User } from '@libs/users/domains/user.domain';
 import { UserEntity } from '@libs/users/entities/user.entity';
+import { UserError } from '@libs/users/errors/user.error';
 import { UserPresenterDTO } from '@libs/users/presenters/user.presenter';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -24,6 +25,27 @@ export class CreateUserUseCase extends BaseUseCase<
   }
 
   async execute(dto: CreateUserDto): Promise<UserPresenterDTO> {
+    // check if user already registered
+    const userRegistered = await this.userRepository.findOne({
+      where: {
+        firebaseUid: dto.firebaseUid,
+      },
+    });
+    if (userRegistered) {
+      throw new UserError.UserAlreadyRegistered();
+    }
+
+    // check if username already exists
+    const userExists = await this.userRepository.findOne({
+      where: {
+        username: dto.username,
+      },
+      withDeleted: true,
+    });
+    if (userExists) {
+      throw new UserError.UserAlreadyExists();
+    }
+
     const user = User.create({
       ...dto,
       isActive: true,

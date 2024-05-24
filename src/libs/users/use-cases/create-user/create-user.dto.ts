@@ -4,20 +4,18 @@ import {
   IsOptional,
   IsString,
   IsUrl,
-  MaxLength,
-  MinLength,
+  Matches,
 } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
-  @MinLength(5)
-  @MaxLength(20)
+  @Matches(/^[a-z0-9._]{5,20}$/, {
+    message:
+      'Username must be between 5 and 20 characters and can only contain lowercase letters, numbers, dots and underscores',
+  })
   username: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @Expose({ name: 'firebase_uid' })
   firebaseUid: string;
 
   @IsUrl()

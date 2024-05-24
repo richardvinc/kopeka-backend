@@ -6,8 +6,8 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 export abstract class BaseDomainError extends HttpException {
   constructor(
     readonly domain: string,
-    readonly description: string,
     readonly cause: Error,
+    readonly description?: string,
   ) {
     super('', HttpStatus.BAD_REQUEST);
   }
@@ -16,10 +16,13 @@ export abstract class BaseDomainError extends HttpException {
     return {
       ok: false,
       error: {
-        error_code: `${this.domain}/${slugify(this.description, {
-          replacement: '-',
-          lower: true,
-        })}`,
+        error_code: `${this.domain}/${slugify(
+          this.description ?? this.cause.message,
+          {
+            replacement: '-',
+            lower: true,
+          },
+        )}`,
         message:
           process.env.NODE_ENV === 'development'
             ? this.cause?.stack

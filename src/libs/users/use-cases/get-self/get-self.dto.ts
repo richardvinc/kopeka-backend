@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 
-export class FindUserByUsernameDTO {
+export class GetSelfDTO {
   @IsString()
-  username: string;
+  firebaseUid: string;
 }

@@ -1,34 +1,56 @@
+import { User } from '@libs/auth/decorators/user.decorator';
 import { FirebaseAuthGuard } from '@libs/auth/guards/firebase-auth.guard';
+import { IUserIdentity } from '@libs/auth/interfaces/user.interface';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 
 import { CreateUserDto } from './use-cases/create-user/create-user.dto';
 import { CreateUserUseCase } from './use-cases/create-user/create-user.use-case';
-import { FindUserByIdDTO } from './use-cases/find-user-by-id/find-user-by-id.dto';
-import { FindUserByIdUseCase } from './use-cases/find-user-by-id/find-user-by-id.use-case';
-import { FindUserByUsernameDTO } from './use-cases/find-user-by-username/find-user-by-username.dto';
-import { FindUserByUsernameUseCase } from './use-cases/find-user-by-username/find-user-by-username.use-case';
+import { GetSelfUseCase } from './use-cases/get-self/get-self.use-case';
+import { GetUserByIdDTO } from './use-cases/get-user-by-id/get-user-by-id.dto';
+import { GetUserByIdUseCase } from './use-cases/get-user-by-id/get-user-by-id.use-case';
+import { GetUserByUsernameDTO } from './use-cases/get-user-by-username/get-user-by-username.dto';
+import { GetUserByUsernameUseCase } from './use-cases/get-user-by-username/get-user-by-username.use-case';
+import { GetUsernameRecommendationDTO } from './use-cases/get-username-recomendation/get-username-recommendation.dto';
+import { GetUsernameRecommendationUseCase } from './use-cases/get-username-recomendation/get-username-recommendation.use-case';
 
 @UseGuards(FirebaseAuthGuard)
 @Controller('users')
 export class UserController {
   constructor(
-    private findUserByIdUseCase: FindUserByIdUseCase,
-    private findUserByUsernameUseCase: FindUserByUsernameUseCase,
+    private getUserByIdUseCase: GetUserByIdUseCase,
+    private getSelfUseCase: GetSelfUseCase,
+    private getUserByUsernameUseCase: GetUserByUsernameUseCase,
     private createUserUseCase: CreateUserUseCase,
+    private getUsernameRecommendationUseCase: GetUsernameRecommendationUseCase,
   ) {}
 
+  @Get('/self')
+  async getSelf(@User() user: IUserIdentity) {
+    return await this.getSelfUseCase.execute({
+      firebaseUid: user.uid,
+    });
+  }
+
   @Get('/id/:id')
-  async findOneById(@Param() dto: FindUserByIdDTO) {
-    return await this.findUserByIdUseCase.execute(dto);
+  async getOneById(@Param() dto: GetUserByIdDTO) {
+    return await this.getUserByIdUseCase.execute(dto);
   }
 
   @Get('/username/:username')
-  async findOneByUsername(@Param() dto: FindUserByUsernameDTO) {
-    return await this.findUserByUsernameUseCase.execute(dto);
+  async getOneByUsername(@Param() dto: GetUserByUsernameDTO) {
+    return await this.getUserByUsernameUseCase.execute(dto);
   }
 
-  @Post()
-  async create(@Body() dto: CreateUserDto) {
-    return await this.createUserUseCase.execute(dto);
+  @Post('/username/recommendation')
+  async getUsernameRecommendations(@Body() dto: GetUsernameRecommendationDTO) {
+    return await this.getUsernameRecommendationUseCase.execute(dto);
+  }
+
+  @Post('/')
+  async createUser(@User() user: IUserIdentity, @Body() dto: CreateUserDto) {
+    return await this.createUserUseCase.execute({
+      ...dto,
+      firebaseUid: user.uid,
+    });
   }
 }
