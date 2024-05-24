@@ -22,7 +22,7 @@ export interface GetLatestReportsFilter {
   excludedReportIds?: string[];
   userId?: string;
   limit?: number;
-  nextToken?: number;
+  nextToken?: string;
 }
 
 @Injectable()
@@ -67,7 +67,9 @@ export class ReportService {
     qb.orderBy('report.rowId', 'DESC');
 
     if (nextToken) {
-      qb.andWhere('report.rowId < :nextToken', { nextToken });
+      qb.andWhere('report.rowId < :nextToken', {
+        nextToken: parseInt(nextToken),
+      });
     }
 
     if (excludedReportIds?.length) {

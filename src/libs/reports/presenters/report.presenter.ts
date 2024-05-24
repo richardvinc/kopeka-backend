@@ -19,10 +19,6 @@ export class ReportPresenterDTO {
   @AutoMap()
   id: string;
 
-  @AutoMap()
-  @Expose({ name: 'row_id' })
-  rowId: number;
-
   @AutoMap(() => GPSLocationDTO)
   location: GPSLocationDTO;
 

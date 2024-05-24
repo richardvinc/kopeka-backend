@@ -22,7 +22,7 @@ export abstract class BaseUseCase<TRequest, TResponse> {
 
   protected paginatedOk(
     data: TResponse,
-    nextToken?: string,
+    nextToken?: string | null,
   ): BasePaginatedResult<TResponse> {
     return {
       data,
