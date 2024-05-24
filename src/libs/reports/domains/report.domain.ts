@@ -20,6 +20,7 @@ interface ReportProps {
   location: GPSLocation;
   imageUrl: string;
   reportedById: string;
+  totalReaction: number;
   category: REPORT_CATEGORY;
   condition: REPORT_CONDITION;
   user?: UserDomain;
@@ -35,6 +36,9 @@ export class ReportDomain extends BaseDomain {
   imageUrl: string;
 
   @AutoMap()
+  totalReaction: number;
+
+  @AutoMap()
   reportedById: string;
 
   @AutoMap()
@@ -42,6 +46,9 @@ export class ReportDomain extends BaseDomain {
 
   @AutoMap()
   condition: REPORT_CONDITION;
+
+  @AutoMap()
+  isReacted?: boolean;
 
   @AutoMap(() => UserDomain)
   user?: UserDomain;

@@ -1,6 +1,10 @@
-import { IsUUID } from 'class-validator';
+import { IsOptional, IsUUID } from 'class-validator';
 
 export class GetReportByIdDTO {
   @IsUUID()
-  id?: string;
+  reportId: string;
+
+  @IsUUID()
+  @IsOptional()
+  userId?: string;
 }

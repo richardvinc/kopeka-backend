@@ -34,6 +34,7 @@ export class CreateReportUseCase extends BaseUseCase<
 
     const report = ReportDomain.create({
       ...dto,
+      totalReaction: 0,
       location: {
         lat: dto.lat,
         lon: dto.lon,

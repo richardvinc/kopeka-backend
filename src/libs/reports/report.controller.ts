@@ -27,13 +27,22 @@ export class ReportController {
     return this.createReportUseCase.execute({ ...dto, reportedById: user.id });
   }
 
-  @Get('/id/:id')
-  async getReportById(@Param() dto: GetReportByIdDTO) {
-    return this.getReportByIdUseCase.execute(dto);
+  @Get('/id/:reportId')
+  async getReportById(
+    @User() user: IUserIdentity,
+    @Param() dto: GetReportByIdDTO,
+  ) {
+    return this.getReportByIdUseCase.execute({
+      ...dto,
+      userId: user.id,
+    });
   }
 
   @Get('/nearby')
-  async getNearbyReports(@Body() dto: GetNearbyReportDTO) {
-    return this.getNearbyReportsUseCase.execute(dto);
+  async getNearbyReports(
+    @User() user: IUserIdentity,
+    @Body() dto: GetNearbyReportDTO,
+  ) {
+    return this.getNearbyReportsUseCase.execute({ ...dto, userId: user.id });
   }
 }

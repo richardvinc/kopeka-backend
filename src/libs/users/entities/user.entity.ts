@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 
 import { AutoMap } from '@automapper/classes';
+import { ReportLikeEntity } from '@libs/reports/entities/report-like.entity';
 import { ReportEntity } from '@libs/reports/entities/report.entity';
 
 @Entity()
@@ -53,4 +54,8 @@ export class UserEntity {
   @OneToMany(() => ReportEntity, (report) => report.user)
   @JoinColumn({ name: 'id', referencedColumnName: 'reportedById' })
   reports: ReportEntity[];
+
+  @OneToMany(() => ReportLikeEntity, (like) => like.report)
+  @JoinColumn({ name: 'id', referencedColumnName: 'userId' })
+  likes: ReportLikeEntity[];
 }

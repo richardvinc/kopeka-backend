@@ -10,4 +10,5 @@ export enum REPORT_CATEGORY {
   OTHER = 'OTHER',
 }
 
+export const NEARBY_REPORT_LIMIT = 5;
 export const GEOHASH_PRECISSION = 7;

@@ -11,4 +11,8 @@ export class GetNearbyReportDTO {
   @IsUUID()
   @Expose({ name: 'report_id' })
   reportId?: string;
+
+  @IsUUID()
+  @IsOptional()
+  userId?: string;
 }

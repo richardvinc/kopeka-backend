@@ -1,4 +1,10 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
+import {
+  condition,
+  createMap,
+  forMember,
+  mapFrom,
+  Mapper,
+} from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { UserDomain } from '@libs/users/domains/user.domain';
 import { UserEntity } from '@libs/users/entities/user.entity';
@@ -61,6 +67,10 @@ export class ReportMapperProfile extends AutomapperProfile {
             };
           }),
         ),
+        forMember(
+          (destination) => destination.isReacted,
+          condition((source) => source.isReacted ?? false, false),
+        ),
       );
 
       createMap(
@@ -84,7 +94,6 @@ export class ReportMapperProfile extends AutomapperProfile {
         map,
         ReportEntity,
         ReportPresenterDTO,
-
         forMember(
           (destination) => destination.reportedBy,
           mapFrom((source) =>
@@ -100,6 +109,10 @@ export class ReportMapperProfile extends AutomapperProfile {
               geo_hash: source.geoHash,
             };
           }),
+        ),
+        forMember(
+          (destination) => destination.isReacted,
+          condition((source) => source.isReacted, false),
         ),
       );
     };

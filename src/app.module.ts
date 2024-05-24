@@ -1,3 +1,5 @@
+import './libs/shared/extensions/typeorm/polyfill';
+
 import { classes } from '@automapper/classes';
 import { CamelCaseNamingConvention } from '@automapper/core';
 import { AutomapperModule } from '@automapper/nestjs';

@@ -5,12 +5,16 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { AutoMap } from '@automapper/classes';
+import { VirtualColumn } from '@libs/shared/decorators/typeorm/virtual-column.decorator';
 import { UserEntity } from '@libs/users/entities/user.entity';
+
+import { ReportLikeEntity } from './report-like.entity';
 
 @Entity()
 export class ReportEntity {
@@ -33,6 +37,10 @@ export class ReportEntity {
   @Column({ name: 'image_url' })
   @AutoMap()
   imageUrl: string;
+
+  @Column({ name: 'reaction_count', default: 0 })
+  @AutoMap()
+  totalReaction: 0;
 
   @Column({ name: 'reported_by_id' })
   @AutoMap()
@@ -58,8 +66,16 @@ export class ReportEntity {
   @AutoMap()
   deletedAt: Date;
 
+  @VirtualColumn()
+  @AutoMap()
+  isReacted: boolean;
+
   @ManyToOne(() => UserEntity, (user) => user.reports, { eager: true })
   @JoinColumn({ name: 'reported_by_id' })
   @AutoMap()
   user: UserEntity;
+
+  @OneToMany(() => ReportLikeEntity, (like) => like.report)
+  @JoinColumn({ name: 'id', referencedColumnName: 'reportId' })
+  likes: ReportLikeEntity[];
 }

@@ -26,6 +26,14 @@ export class ReportPresenterDTO {
   @Expose({ name: 'image_url' })
   imageUrl: string;
 
+  @AutoMap()
+  @Expose({ name: 'total_reaction' })
+  totalReaction: number;
+
+  @AutoMap()
+  @Expose({ name: 'is_reacted' })
+  isReacted: boolean;
+
   @AutoMap(() => UserPresenterMinimalDTO)
   @Expose({ name: 'reported_by' })
   reportedBy: UserPresenterMinimalDTO;
