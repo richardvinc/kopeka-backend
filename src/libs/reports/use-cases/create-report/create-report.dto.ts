@@ -1,7 +1,10 @@
 import { Expose } from 'class-transformer';
 import { IsEnum, IsLatitude, IsLongitude, IsUrl } from 'class-validator';
 
-import { REPORT_CATEGORY, REPORT_CONDITION } from '../report.constant';
+import {
+  REPORT_CATEGORY,
+  REPORT_CONDITION,
+} from '@libs/reports/report.constant';
 
 export class CreateReportDTO {
   @IsLatitude()

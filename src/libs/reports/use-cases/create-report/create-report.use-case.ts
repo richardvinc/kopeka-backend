@@ -6,10 +6,10 @@ import { InjectMapper } from '@automapper/nestjs';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { ReportDomain } from '../domains/report.domain';
-import { ReportEntity } from '../entities/report.entity';
-import { ReportPresenterDTO } from '../presenters/report.presenter';
-import { GEOHASH_PRECISSION } from '../report.constant';
+import { ReportDomain } from '../../domains/report.domain';
+import { ReportEntity } from '../../entities/report.entity';
+import { ReportPresenterDTO } from '../../presenters/report.presenter';
+import { GEOHASH_PRECISSION } from '../../report.constant';
 import { CreateReportDTO } from './create-report.dto';
 
 export class CreateReportUseCase extends BaseUseCase<

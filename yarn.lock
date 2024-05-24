@@ -1279,11 +1279,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/latlon-geohash@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@types/latlon-geohash/-/latlon-geohash-2.0.3.tgz#e41ae8ca136a84c55a76ca7fc9b5dbad0bbba45a"
-  integrity sha512-VP6CWnHN4GT48Ra83JQl31SN/qSRp0OI2lb3TPPH+PhZpVzSxZbtjMNbUQQNZ2SdIOHMctOCv+q+EIyJQ5EaKw==
-
 "@types/long@^4.0.0":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@types/long/-/long-4.0.2.tgz#b74129719fc8d11c01868010082d483b7545591a"
@@ -1298,6 +1293,11 @@
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.5.tgz#1ef302e01cf7d2b5a0fa526790c9123bf1d06690"
   integrity sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==
+
+"@types/ngeohash@^0.6.8":
+  version "0.6.8"
+  resolved "https://registry.yarnpkg.com/@types/ngeohash/-/ngeohash-0.6.8.tgz#7d4c44933a3f0fd10b2bb45df879618904cb3c9e"
+  integrity sha512-A90x3HMwE1yXbWCnd0ztHzv8rAQPjwTzX2diYI/6OrWm/3oairDaehw5WPWJFgZ+8+J/OuF99IbipmMa2le6tQ==
 
 "@types/node@*", "@types/node@^20.3.1":
   version "20.12.8"
@@ -4230,11 +4230,6 @@ kleur@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
-
-latlon-geohash@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/latlon-geohash/-/latlon-geohash-2.0.0.tgz#2b0203ab30ef56a18600b0312b8c3a627cbd17d1"
-  integrity sha512-OKBswTwrvTdtenV+9C9euBmvgGuqyjJNAzpQCarRz1m8/pYD2nz9fKkXmLs2S3jeXaLi3Ry76twQplKKUlgS/g==
 
 leven@^3.1.0:
   version "3.1.0"
