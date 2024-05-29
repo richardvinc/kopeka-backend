@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, Matches } from 'class-validator';
 
-export class GetUserByUsernameDTO {
+export class IsUsernameExistsDTO {
   @IsString()
   @IsNotEmpty()
   @Matches(/^[a-z0-9._]{5,20}$/, {

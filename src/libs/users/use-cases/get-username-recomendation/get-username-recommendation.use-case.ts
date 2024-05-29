@@ -36,7 +36,6 @@ export class GetUsernameRecommendationUseCase extends BaseUseCase<
       'tarantula',
       'scorpion',
       'hermit_crab',
-      'millipede',
     ];
 
     const alreadyRecommendedUsernames = dto.alreadyRecommendedUsernames || [];
@@ -52,7 +51,11 @@ export class GetUsernameRecommendationUseCase extends BaseUseCase<
           )
           .map((secondWord) => `${firstWord}_${secondWord}`),
       )
-      .flat();
+      .flat()
+      .map((v) => ({ v, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map((v) => v.v)
+      .slice(0, 5);
 
     return this.ok(recommendations);
   }

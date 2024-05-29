@@ -7,6 +7,8 @@ export abstract class BaseUseCase<TRequest, TResponse> {
   abstract execute(
     dto: TRequest,
   ):
+    | Promise<TResponse>
+    | TResponse
     | Promise<BaseResult<TResponse>>
     | BaseResult<TResponse>
     | Promise<BasePaginatedResult<TResponse>>

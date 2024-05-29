@@ -14,6 +14,10 @@ async function bootstrap() {
       forbidUnknownValues: true,
     }),
   );
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  });
   await app.listen(3000);
 }
 bootstrap();

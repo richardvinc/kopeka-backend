@@ -10,7 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       useFactory: (configService: DatabaseConfigService) => ({
         type: 'postgres',
         url: configService.pgDatabaseUrl,
-        synchronize: true,
+        synchronize: false,
         autoLoadEntities: true,
         logging: true,
         useUTC: true,
