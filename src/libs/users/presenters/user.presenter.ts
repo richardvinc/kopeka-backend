@@ -7,7 +7,7 @@ export class UserPresenterDTO {
   id: string;
 
   @AutoMap()
-  username: string;
+  username?: string;
 
   // @AutoMap()
   // @Expose({ name: 'firebase_uid' })
@@ -15,7 +15,7 @@ export class UserPresenterDTO {
 
   @AutoMap()
   @Expose({ name: 'profile_picture_url' })
-  profilePictureUrl: string;
+  profilePictureUrl?: string;
 
   @AutoMap()
   @Expose({ name: 'created_at' })

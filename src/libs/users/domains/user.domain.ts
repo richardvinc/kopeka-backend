@@ -2,26 +2,26 @@ import { AutoMap } from '@automapper/classes';
 import { BaseDomain } from '@libs/shared/domains/base-domain';
 
 interface UserProps {
-  username: string;
+  username?: string;
   firebaseUid: string;
-  profilePictureUrl: string;
+  profilePictureUrl?: string;
   isActive: boolean;
   fcmToken?: string;
 }
 
 type UpdateableProps = Partial<
-  Pick<UserProps, 'fcmToken' | 'profilePictureUrl' | 'isActive'>
+  Pick<UserProps, 'username' | 'fcmToken' | 'profilePictureUrl' | 'isActive'>
 >;
 
 export class UserDomain extends BaseDomain {
   @AutoMap()
-  username: string;
+  username?: string;
 
   @AutoMap()
   firebaseUid: string;
 
   @AutoMap()
-  profilePictureUrl: string;
+  profilePictureUrl?: string;
 
   @AutoMap()
   isActive: boolean;

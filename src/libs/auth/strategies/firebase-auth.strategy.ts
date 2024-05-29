@@ -30,17 +30,19 @@ export class FirebaseAuthStrategy extends PassportStrategy(
         throw new AuthErrors.InvalidToken(err.message);
       });
 
-    const user = await this.userService.getUserByFirebaseUid(
-      decodedIdToken.uid,
-    );
+    let user = await this.userService.getUserByFirebaseUid(decodedIdToken.uid);
+
+    // if user is not found, create a new user
     if (!user) {
-      throw new AuthErrors.UserNotFound();
+      user = await this.userService.createUserFromFirebase(
+        decodedIdToken.uid,
+        decodedIdToken.picture,
+      );
     }
 
     return {
       id: user.id,
       firebaseUid: user.firebaseUid,
-      username: user.username,
     };
   }
 }

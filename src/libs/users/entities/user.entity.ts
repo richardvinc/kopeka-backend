@@ -19,17 +19,17 @@ export class UserEntity {
   @AutoMap()
   id: string;
 
-  @Column({ name: 'username', unique: true })
+  @Column({ name: 'username', nullable: true })
   @AutoMap()
-  username: string;
+  username?: string;
 
   @Column({ name: 'firebase_uid', unique: true })
   @AutoMap()
   firebaseUid: string;
 
-  @Column({ name: 'profile_picture_url' })
+  @Column({ name: 'profile_picture_url', nullable: true })
   @AutoMap()
-  profilePictureUrl: string;
+  profilePictureUrl?: string;
 
   @Column({ name: 'fcm_token', nullable: true })
   @AutoMap()

@@ -18,10 +18,32 @@ export class UserService {
   ) {}
 
   async getUserByFirebaseUid(firebaseUid: string): Promise<UserDomain | null> {
-    const user = await this.userRepository.findOne({
-      where: { firebaseUid },
+    const user = await this.userRepository
+      .findOneBy({
+        firebaseUid,
+      })
+      .catch((err) => {
+        console.log('ERROR', err);
+        return null;
+      });
+
+    return user ? this.mapper.map(user, UserEntity, UserDomain) : null;
+  }
+
+  async createUserFromFirebase(
+    firebaseUid: string,
+    profilePictureUrl?: string,
+  ): Promise<UserDomain> {
+    const user = UserDomain.create({
+      firebaseUid,
+      isActive: true,
+      profilePictureUrl,
     });
 
-    return this.mapper.map(user, UserEntity, UserDomain);
+    const registeredUser = await this.userRepository.save(
+      this.mapper.map(user, UserDomain, UserEntity),
+    );
+
+    return this.mapper.map(registeredUser, UserEntity, UserDomain);
   }
 }

@@ -28,7 +28,9 @@ SelectQueryBuilder.prototype.getMany = async function () {
 
 SelectQueryBuilder.prototype.getOne = async function () {
   const { entities, raw } = await this.getRawAndEntities();
-  const metaInfo = Reflect.getMetadata(VIRTUAL_COLUMN_KEY, entities[0]) ?? {};
+  const metaInfo = entities.length
+    ? Reflect.getMetadata(VIRTUAL_COLUMN_KEY, entities[0]) ?? {}
+    : {};
 
   for (const [propertyKey, name] of Object.entries<string>(metaInfo)) {
     entities[0][propertyKey] = raw[0][name];
