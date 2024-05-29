@@ -14,6 +14,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         autoLoadEntities: true,
         logging: true,
         useUTC: true,
+        ssl: true,
       }),
       inject: [DatabaseConfigService],
     }),

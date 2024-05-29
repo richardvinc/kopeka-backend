@@ -9,6 +9,7 @@ import { AppConfigService } from './app-config.service';
     ConfigModule.forRoot({
       load: [appConfig],
       isGlobal: true,
+      envFilePath: ['.env', '.env.dev'],
     }),
   ],
   providers: [AppConfigService],
