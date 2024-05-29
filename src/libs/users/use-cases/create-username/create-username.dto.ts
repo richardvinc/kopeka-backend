@@ -7,7 +7,7 @@ import {
   Matches,
 } from 'class-validator';
 
-export class CreateUserDto {
+export class CreateUsernameDto {
   @IsString()
   @IsNotEmpty()
   @Matches(/^[a-z0-9._]{5,20}$/, {
@@ -25,5 +25,5 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   @Expose({ name: 'fcm_token' })
-  fcmToken: string;
+  fcmToken?: string;
 }

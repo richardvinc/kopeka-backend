@@ -10,10 +10,10 @@ import { UserError } from '@libs/users/errors/user.error';
 import { UserPresenterDTO } from '@libs/users/presenters/user.presenter';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { CreateUserDto } from './create-user.dto';
+import { CreateUsernameDto } from './create-username.dto';
 
-export class CreateUserUseCase extends BaseUseCase<
-  CreateUserDto,
+export class CreateUsernameUseCase extends BaseUseCase<
+  CreateUsernameDto,
   UserPresenterDTO
 > {
   constructor(
@@ -25,15 +25,15 @@ export class CreateUserUseCase extends BaseUseCase<
     super();
   }
 
-  async execute(dto: CreateUserDto): Promise<BaseResult<UserPresenterDTO>> {
+  async execute(dto: CreateUsernameDto): Promise<BaseResult<UserPresenterDTO>> {
     // check if user already registered
-    const userRegistered = await this.userRepository.findOne({
+    const registeredUser = await this.userRepository.findOne({
       where: {
         firebaseUid: dto.firebaseUid,
       },
     });
-    if (userRegistered) {
-      throw new UserError.UserAlreadyRegistered();
+    if (!registeredUser) {
+      throw new UserError.UserNotFound();
     }
 
     // check if username already exists
@@ -47,9 +47,11 @@ export class CreateUserUseCase extends BaseUseCase<
       throw new UserError.UserAlreadyExists();
     }
 
-    const user = UserDomain.create({
-      ...dto,
-      isActive: true,
+    const user = this.mapper.map(registeredUser, UserEntity, UserDomain);
+    user.update({
+      username: dto.username,
+      profilePictureUrl: dto.profilePictureUrl,
+      fcmToken: dto.fcmToken,
     });
 
     const userCreated = await this.userRepository.save(

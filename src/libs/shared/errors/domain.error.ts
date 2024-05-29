@@ -14,7 +14,6 @@ export abstract class BaseDomainError extends HttpException {
 
   getResponse(): HttpErrorResponse {
     return {
-      ok: false,
       error: {
         error_code: `${this.domain}/${slugify(
           this.description ?? this.cause.message,

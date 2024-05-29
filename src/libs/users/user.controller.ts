@@ -3,8 +3,8 @@ import { FirebaseAuthGuard } from '@libs/auth/guards/firebase-auth.guard';
 import { IUserIdentity } from '@libs/auth/interfaces/user.interface';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 
-import { CreateUserDto } from './use-cases/create-user/create-user.dto';
-import { CreateUserUseCase } from './use-cases/create-user/create-user.use-case';
+import { CreateUsernameDto } from './use-cases/create-username/create-username.dto';
+import { CreateUsernameUseCase } from './use-cases/create-username/create-username.use-case';
 import { GetSelfUseCase } from './use-cases/get-self/get-self.use-case';
 import { GetUserByIdDTO } from './use-cases/get-user-by-id/get-user-by-id.dto';
 import { GetUserByIdUseCase } from './use-cases/get-user-by-id/get-user-by-id.use-case';
@@ -20,7 +20,7 @@ export class UserController {
     private getUserByIdUseCase: GetUserByIdUseCase,
     private getSelfUseCase: GetSelfUseCase,
     private isUsernameExistsUseCase: IsUsernameExistsUseCase,
-    private createUserUseCase: CreateUserUseCase,
+    private createUsernameUseCase: CreateUsernameUseCase,
     private getUsernameRecommendationUseCase: GetUsernameRecommendationUseCase,
   ) {}
 
@@ -46,9 +46,12 @@ export class UserController {
     return await this.getUsernameRecommendationUseCase.execute(dto);
   }
 
-  @Post('/')
-  async createUser(@User() user: IUserIdentity, @Body() dto: CreateUserDto) {
-    return await this.createUserUseCase.execute({
+  @Post('/username')
+  async createUsername(
+    @User() user: IUserIdentity,
+    @Body() dto: CreateUsernameDto,
+  ) {
+    return await this.createUsernameUseCase.execute({
       ...dto,
       firebaseUid: user.firebaseUid,
     });

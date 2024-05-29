@@ -38,7 +38,7 @@ export class UserDomain extends BaseDomain {
     return new UserDomain(props, id);
   }
 
-  update(props: UpdateableProps) {
+  public update(props: UpdateableProps) {
     Object.assign(this, { ...this, ...props, updatedAt: new Date() });
   }
 }

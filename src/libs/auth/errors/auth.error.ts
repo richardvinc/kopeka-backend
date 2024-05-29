@@ -14,7 +14,6 @@ export abstract class BaseAuthError extends HttpException {
 
   getResponse(): HttpErrorResponse {
     return {
-      ok: false,
       error: {
         error_code: `auth/${slugify(this.description ?? this.cause.message, {
           replacement: '-',

@@ -1,5 +1,4 @@
 export interface HttpErrorResponse {
-  ok: false;
   error: {
     result_type?: string;
     error_code: string;
@@ -8,8 +7,6 @@ export interface HttpErrorResponse {
   };
 }
 
-export type HttpSuccessResponse<T> = {
-  ok: true;
-} & T;
+export type HttpSuccessResponse<T> = T;
 
 export type HttpResponse<T> = HttpSuccessResponse<T> | HttpErrorResponse;

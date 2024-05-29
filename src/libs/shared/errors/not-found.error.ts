@@ -11,7 +11,6 @@ export abstract class BaseNotFoundError extends HttpException {
 
   getResponse(): HttpErrorResponse {
     return {
-      ok: false,
       error: {
         error_code: `${this.domain}/not-found`,
         message:
