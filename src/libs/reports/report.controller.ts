@@ -13,6 +13,8 @@ import {
 
 import { CreateReportDTO } from './use-cases/create-report/create-report.dto';
 import { CreateReportUseCase } from './use-cases/create-report/create-report.use-case';
+import { GetImageUploadUrlDTO } from './use-cases/get-image-upload-url/get-image-upload-url.dto';
+import { GetImageUploadUrlUseCase } from './use-cases/get-image-upload-url/get-image-upload-url.use-case';
 import { GetLatestReportsDTO } from './use-cases/get-latest-reports/get-latest-reports.dto';
 import { GetLatestReportsUseCase } from './use-cases/get-latest-reports/get-latest-reports.use-case';
 import { GetNearbyReportDTO } from './use-cases/get-nearby-report/get-nearby-report.dto';
@@ -31,6 +33,7 @@ export class ReportController {
     private getNearbyReportsUseCase: GetNearbyReportUseCase,
     private likeReportUseCase: LikeReportUseCase,
     private getLatestReportsUseCase: GetLatestReportsUseCase,
+    private getImageUploadURLUseCase: GetImageUploadUrlUseCase,
   ) {}
 
   @Post()
@@ -42,6 +45,11 @@ export class ReportController {
       ...dto,
       reportedById: user.id,
     });
+  }
+
+  @Get('/image-upload-url')
+  async getImageUploadURL(@Query() dto: GetImageUploadUrlDTO) {
+    return await this.getImageUploadURLUseCase.execute({ ...dto });
   }
 
   @Get('/nearby')

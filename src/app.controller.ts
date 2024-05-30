@@ -16,7 +16,7 @@ export class AppController {
 
   @Public()
   @Get('non-auth')
-  getHelloNonJwt(): string {
+  async getHelloNonJwt(): Promise<string> {
     return 'Hello World non auth!';
   }
 }
