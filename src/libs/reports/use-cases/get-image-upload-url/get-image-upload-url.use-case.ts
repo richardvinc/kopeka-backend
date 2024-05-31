@@ -8,8 +8,8 @@ import { Inject } from '@nestjs/common';
 import { GetImageUploadUrlDTO } from './get-image-upload-url.dto';
 
 export interface ImageSASResult {
-  sasToken: string;
-  accessUrl: string;
+  sas_url: string;
+  access_url: string;
 }
 
 export class GetImageUploadUrlUseCase extends BaseUseCase<
@@ -24,16 +24,16 @@ export class GetImageUploadUrlUseCase extends BaseUseCase<
   }
 
   async execute(dto: GetImageUploadUrlDTO): Promise<ImageSASResult> {
-    const fileName = `${Date.now()}_${randomUUID()}_${dto.mimeType.split('/')[1]}`;
+    const fileName = `${Date.now()}_${randomUUID()}.${dto.mimeType.split('/')[1]}`;
 
-    const sasToken =
-      await this.reportImageStorageService.generateSasToken(fileName);
+    const sasUrl =
+      await this.reportImageStorageService.generateSasUrl(fileName);
     const accessUrl =
       await this.reportImageStorageService.generateAccessURL(fileName);
 
     return {
-      sasToken,
-      accessUrl,
+      sas_url: sasUrl,
+      access_url: accessUrl,
     };
   }
 }

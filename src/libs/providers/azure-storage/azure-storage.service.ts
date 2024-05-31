@@ -19,7 +19,7 @@ export class AzureStorageService {
     return blobClientService;
   }
 
-  public async generateSasToken(containerName: string, blobName: string) {
+  public async generateSasUrl(containerName: string, blobName: string) {
     const blobService = await this.getBlobServiceInstance();
     const containerClient = blobService.getContainerClient(containerName);
     const blobClient = containerClient.getBlobClient(blobName);
@@ -27,7 +27,7 @@ export class AzureStorageService {
     const sasToken = await blobClient.generateSasUrl({
       permissions: ContainerSASPermissions.parse('w'),
       startsOn: new Date(),
-      expiresOn: new Date(new Date().valueOf() + 86400),
+      expiresOn: new Date(new Date().valueOf() + 3600),
     });
 
     return sasToken;

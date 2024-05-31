@@ -14,12 +14,12 @@ export class ReportImageStorageService {
     this.storageAccountName = this.azureStorageService.getStorageAccountName();
   }
 
-  async generateSasToken(fileName: string): Promise<string> {
-    const sasToken = await this.azureStorageService.generateSasToken(
+  async generateSasUrl(fileName: string): Promise<string> {
+    const sasUrl = await this.azureStorageService.generateSasUrl(
       this.containerName,
       fileName,
     );
-    return sasToken;
+    return sasUrl;
   }
 
   async generateAccessURL(fileName: string): Promise<string> {
