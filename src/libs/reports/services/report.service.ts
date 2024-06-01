@@ -41,6 +41,11 @@ export class ReportService {
     userId?: string,
   ): Promise<ReportDomain | null> {
     const qb = await this.reportRepository.createQueryBuilder('report');
+    qb.leftJoinAndSelect(
+      'report.user',
+      'user',
+      'user.id = report.reported_by_id',
+    );
     qb.where('report.id = :id', { id: reportId });
 
     if (userId) {
@@ -49,7 +54,8 @@ export class ReportService {
         'CASE WHEN COUNT(like.report_id) > 0 THEN true ELSE false END',
         'isReacted',
       );
-      qb.groupBy('report.id');
+      qb.addGroupBy('report.id');
+      qb.addGroupBy('user.id');
     }
 
     const report = await qb.getOne();
@@ -64,6 +70,11 @@ export class ReportService {
     const { excludedReportIds, userId, limit, nextToken } = filter;
 
     const qb = await this.reportRepository.createQueryBuilder('report');
+    qb.leftJoinAndSelect(
+      'report.user',
+      'user',
+      'user.id = report.reported_by_id',
+    );
     qb.orderBy('report.rowId', 'DESC');
 
     if (nextToken) {
@@ -84,7 +95,8 @@ export class ReportService {
         'CASE WHEN COUNT(like.report_id) > 0 THEN true ELSE false END',
         'isReacted',
       );
-      qb.groupBy('report.id');
+      qb.addGroupBy('report.id');
+      qb.addGroupBy('user.id');
     }
 
     qb.limit(limit ?? 10);
@@ -100,6 +112,11 @@ export class ReportService {
     const { geoHash, excludedReportId, userId, limit } = filter;
     const neighbors = GeoHash.neighbors(geoHash);
     const qb = await this.reportRepository.createQueryBuilder('report');
+    qb.leftJoinAndSelect(
+      'report.user',
+      'user',
+      'user.id = report.reported_by_id',
+    );
     qb.where('report.geoHash IN(:...geoHashes)', {
       geoHashes: [geoHash, ...neighbors],
     });
@@ -112,7 +129,8 @@ export class ReportService {
         'CASE WHEN COUNT(like.report_id) > 0 THEN true ELSE false END',
         'isReacted',
       );
-      qb.groupBy('report.id');
+      qb.addGroupBy('report.id');
+      qb.addGroupBy('user.id');
     }
 
     qb.limit(limit ?? 10);
