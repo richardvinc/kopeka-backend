@@ -3,7 +3,7 @@ import { IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
 
 export class GetNearbyReportDTO {
   @IsString()
-  @MaxLength(7)
+  @MaxLength(9)
   @Expose({ name: 'geo_hash' })
   geoHash: string;
 

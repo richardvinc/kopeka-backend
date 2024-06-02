@@ -32,7 +32,8 @@ export class GetNearbyReportUseCase extends BaseUseCase<
     const { geoHash, reportId, userId } = dto;
 
     const reports = await this.reportService.getNearbyReports({
-      geoHash,
+      // for now, trim to 6 characters
+      geoHash: geoHash.substring(0, 6),
       excludedReportId: reportId,
       userId,
       limit: NEARBY_REPORT_LIMIT,
