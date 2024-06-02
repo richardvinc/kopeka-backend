@@ -55,7 +55,7 @@ export class ReportController {
   @Get('/nearby')
   async getNearbyReports(
     @User() user: IUserIdentity,
-    @Body() dto: GetNearbyReportDTO,
+    @Query() dto: GetNearbyReportDTO,
   ) {
     return await this.getNearbyReportsUseCase.execute({
       ...dto,
