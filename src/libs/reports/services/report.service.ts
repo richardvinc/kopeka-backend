@@ -10,6 +10,7 @@ import { ReportDomain } from '../domains/report.domain';
 import { ReportLikeEntity } from '../entities/report-like.entity';
 import { ReportEntity } from '../entities/report.entity';
 import { ReportError } from '../errors/report.error';
+import { GEOHASH_SEARCH_PRECISSION } from '../report.constant';
 
 export interface GetNearbyReportsFilter {
   geoHash: string;
@@ -117,7 +118,8 @@ export class ReportService {
       'user',
       'user.id = report.reported_by_id',
     );
-    qb.where('report.geoHash IN(:...geoHashes)', {
+    qb.where('substring(report.geoHash, 0, :precission) IN(:...geoHashes)', {
+      precission: GEOHASH_SEARCH_PRECISSION,
       geoHashes: [geoHash, ...neighbors],
     });
     if (excludedReportId) {
