@@ -1,8 +1,10 @@
 import { ExtractJwt, Strategy } from 'passport-firebase-jwt';
 
+import { FIREBASE_ADMIN_SERVICE } from '@libs/providers/firebase-admin/firebase-admin.module';
 import { FirebaseAdminService } from '@libs/providers/firebase-admin/firebase-admin.service';
 import { UserService } from '@libs/users/services/user.service';
-import { Injectable } from '@nestjs/common';
+import { USER_SERVICE } from '@libs/users/user.contants';
+import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 
 import { FIREBASE_AUTH_STRATEGY } from '../auth.constants';
@@ -15,7 +17,9 @@ export class FirebaseAuthStrategy extends PassportStrategy(
   FIREBASE_AUTH_STRATEGY,
 ) {
   constructor(
+    @Inject(FIREBASE_ADMIN_SERVICE)
     private firebaseAdmin: FirebaseAdminService,
+    @Inject(USER_SERVICE)
     private userService: UserService,
   ) {
     super({

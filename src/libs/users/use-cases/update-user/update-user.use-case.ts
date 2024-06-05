@@ -9,28 +9,40 @@ import { UserService } from '@libs/users/services/user.service';
 import { USER_SERVICE } from '@libs/users/user.contants';
 import { Inject, Logger } from '@nestjs/common';
 
-import { GetSelfDTO } from './get-self.dto';
+import { UpdateUserDTO } from './update-user.dto';
 
-export class GetSelfUseCase extends BaseUseCase<GetSelfDTO, UserPresenterDTO> {
-  private readonly logger = new Logger(GetSelfUseCase.name);
+export class UpdateUserUseCase extends BaseUseCase<
+  UpdateUserDTO,
+  UserPresenterDTO
+> {
+  private readonly logger = new Logger(UpdateUserUseCase.name);
+
   constructor(
-    @InjectMapper()
-    private mapper: Mapper,
     @Inject(USER_SERVICE)
     private userService: UserService,
+    @InjectMapper()
+    private mapper: Mapper,
   ) {
     super();
   }
 
-  async execute(dto: GetSelfDTO): Promise<BaseResult<UserPresenterDTO>> {
+  async execute(dto: UpdateUserDTO): Promise<BaseResult<UserPresenterDTO>> {
     this.logger.log(`START: execute`);
     this.logger.log(`dto: ${JSON.stringify(dto)}`);
-    const user = await this.userService.getUserByFirebaseUid(dto.firebaseUid);
+
+    const user = await this.userService.getUserById(dto.userId);
     if (!user) {
       throw new UserError.UserNotFound();
     }
 
+    user.update({
+      isOnboarded: dto.isOnboarded,
+      fcmToken: dto.fcmToken,
+    });
+
+    const updatedUser = await this.userService.updateUser(user);
+
     this.logger.log(`END: execute`);
-    return this.ok(this.mapper.map(user, UserDomain, UserPresenterDTO));
+    return this.ok(this.mapper.map(updatedUser, UserDomain, UserPresenterDTO));
   }
 }

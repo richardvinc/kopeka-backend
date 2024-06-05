@@ -18,6 +18,10 @@ export class UserPresenterDTO {
   profilePictureUrl?: string;
 
   @AutoMap()
+  @Expose({ name: 'is_onboarded' })
+  isOnboarded: boolean;
+
+  @AutoMap()
   @Expose({ name: 'created_at' })
   createdAt: string;
 

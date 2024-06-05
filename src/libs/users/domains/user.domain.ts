@@ -6,11 +6,15 @@ interface UserProps {
   firebaseUid: string;
   profilePictureUrl?: string;
   isActive: boolean;
+  isOnboarded?: boolean;
   fcmToken?: string;
 }
 
 type UpdateableProps = Partial<
-  Pick<UserProps, 'username' | 'fcmToken' | 'profilePictureUrl' | 'isActive'>
+  Pick<
+    UserProps,
+    'username' | 'fcmToken' | 'profilePictureUrl' | 'isActive' | 'isOnboarded'
+  >
 >;
 
 export class UserDomain extends BaseDomain {
@@ -24,6 +28,9 @@ export class UserDomain extends BaseDomain {
   profilePictureUrl?: string;
 
   @AutoMap()
+  isOnboarded: boolean;
+
+  @AutoMap()
   isActive: boolean;
 
   @AutoMap()
@@ -31,7 +38,7 @@ export class UserDomain extends BaseDomain {
 
   constructor(props: UserProps, id?: string) {
     super(id);
-    Object.assign(this, { ...props });
+    Object.assign(this, { ...props, isOnboarded: false });
   }
 
   public static create(props: UserProps, id?: string) {

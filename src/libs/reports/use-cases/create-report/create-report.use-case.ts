@@ -5,7 +5,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { ReportService } from '@libs/reports/services/report.service';
 import { BaseResult } from '@libs/shared/presenters/result.presenter';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 
 import { ReportDomain } from '../../domains/report.domain';
 import { ReportPresenterDTO } from '../../presenters/report.presenter';
@@ -16,6 +16,7 @@ export class CreateReportUseCase extends BaseUseCase<
   CreateReportDTO,
   ReportPresenterDTO
 > {
+  private readonly logger = new Logger(CreateReportUseCase.name);
   constructor(
     @InjectMapper()
     private mapper: Mapper,
@@ -26,6 +27,9 @@ export class CreateReportUseCase extends BaseUseCase<
   }
 
   async execute(dto: CreateReportDTO): Promise<BaseResult<ReportPresenterDTO>> {
+    this.logger.log(`START: execute`);
+    this.logger.log(`dto: ${JSON.stringify(dto)}`);
+
     const geoHash: string = GeoHash.encode(
       dto.lat,
       dto.lon,
@@ -44,6 +48,7 @@ export class CreateReportUseCase extends BaseUseCase<
 
     const createdReport = await this.reportService.createReport(report);
 
+    this.logger.log(`END: execute`);
     return this.ok(
       this.mapper.map(createdReport, ReportDomain, ReportPresenterDTO),
     );

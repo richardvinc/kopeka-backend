@@ -1,14 +1,13 @@
-import { Repository } from 'typeorm';
-
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { BaseResult } from '@libs/shared/presenters/result.presenter';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
 import { UserDomain } from '@libs/users/domains/user.domain';
-import { UserEntity } from '@libs/users/entities/user.entity';
 import { UserError } from '@libs/users/errors/user.error';
 import { UserPresenterDTO } from '@libs/users/presenters/user.presenter';
-import { InjectRepository } from '@nestjs/typeorm';
+import { UserService } from '@libs/users/services/user.service';
+import { USER_SERVICE } from '@libs/users/user.contants';
+import { Inject, Logger } from '@nestjs/common';
 
 import { CreateUsernameDto } from './create-username.dto';
 
@@ -16,48 +15,44 @@ export class CreateUsernameUseCase extends BaseUseCase<
   CreateUsernameDto,
   UserPresenterDTO
 > {
+  private readonly logger = new Logger(CreateUsernameUseCase.name);
   constructor(
     @InjectMapper()
     private mapper: Mapper,
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    @Inject(USER_SERVICE)
+    private userService: UserService,
   ) {
     super();
   }
 
   async execute(dto: CreateUsernameDto): Promise<BaseResult<UserPresenterDTO>> {
+    this.logger.log(`START: execute`);
+    this.logger.log(`dto: ${JSON.stringify(dto)}`);
     // check if user already registered
-    const registeredUser = await this.userRepository.findOne({
-      where: {
-        firebaseUid: dto.firebaseUid,
-      },
-    });
+    const registeredUser = await this.userService.getUserByFirebaseUid(
+      dto.firebaseUid,
+    );
     if (!registeredUser) {
       throw new UserError.UserNotFound();
     }
 
     // check if username already exists
-    const userExists = await this.userRepository.findOne({
-      where: {
-        username: dto.username,
-      },
-      withDeleted: true,
-    });
-    if (userExists) {
+    const usernameExists = await this.userService.getUserByUsername(
+      dto.username,
+    );
+    if (usernameExists) {
       throw new UserError.UserAlreadyExists();
     }
 
-    const user = this.mapper.map(registeredUser, UserEntity, UserDomain);
-    user.update({
+    registeredUser.update({
       username: dto.username,
       profilePictureUrl: dto.profilePictureUrl,
       fcmToken: dto.fcmToken,
     });
 
-    const userCreated = await this.userRepository.save(
-      this.mapper.map(user, UserDomain, UserEntity),
-    );
+    const userCreated = await this.userService.updateUser(registeredUser);
 
-    return this.ok(this.mapper.map(userCreated, UserEntity, UserPresenterDTO));
+    this.logger.log(`END: execute`);
+    return this.ok(this.mapper.map(userCreated, UserDomain, UserPresenterDTO));
   }
 }

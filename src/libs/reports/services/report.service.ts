@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { ReportDomain } from '../domains/report.domain';
@@ -28,6 +28,7 @@ export interface GetLatestReportsFilter {
 
 @Injectable()
 export class ReportService {
+  private readonly logger = new Logger(ReportService.name);
   constructor(
     @InjectMapper()
     private mapper: Mapper,
@@ -41,6 +42,8 @@ export class ReportService {
     reportId: string,
     userId?: string,
   ): Promise<ReportDomain | null> {
+    this.logger.log(`START: getReportById`);
+    this.logger.log(`Getting report by id: ${reportId}`);
     const qb = await this.reportRepository.createQueryBuilder('report');
     qb.leftJoinAndSelect(
       'report.user',
@@ -60,14 +63,20 @@ export class ReportService {
     }
 
     const report = await qb.getOne();
+    this.logger.log(`query: ${qb.getQuery()}`);
     if (!report) throw new ReportError.ReportNotFound();
 
+    this.logger.log(`END: getReportById`);
     return this.mapper.map(report, ReportEntity, ReportDomain);
   }
 
   async getLatestReports(
     filter: GetLatestReportsFilter,
   ): Promise<ReportDomain[]> {
+    this.logger.log(`START: getLatestReports`);
+    this.logger.log(
+      `Getting latest reports with filter: ${JSON.stringify(filter)}`,
+    );
     const { excludedReportIds, userId, limit, nextToken } = filter;
 
     const qb = await this.reportRepository.createQueryBuilder('report');
@@ -103,13 +112,17 @@ export class ReportService {
     qb.limit(limit ?? 10);
 
     const reports = await qb.getMany();
+    this.logger.log(`query: ${qb.getQuery()}`);
 
+    this.logger.log(`END: getLatestReports`);
     return this.mapper.mapArray(reports, ReportEntity, ReportDomain);
   }
 
   async getNearbyReports(
     filter: GetNearbyReportsFilter,
   ): Promise<ReportDomain[]> {
+    this.logger.log(`START: getNearbyReports`);
+
     const { geoHash, excludedReportId, userId, limit } = filter;
     const neighbors = GeoHash.neighbors(geoHash);
     const qb = await this.reportRepository.createQueryBuilder('report');
@@ -138,22 +151,30 @@ export class ReportService {
     qb.limit(limit ?? 10);
 
     const reports = await qb.getMany();
+    this.logger.log(`query: ${qb.getQuery()}`);
 
+    this.logger.log(`END: getNearbyReports`);
     return this.mapper.mapArray(reports, ReportEntity, ReportDomain);
   }
 
   async likeReport(reportId: string, userId: string): Promise<void> {
+    this.logger.log(`START: likeReport`);
+    this.logger.log(`Liking report with id: ${reportId} by user: ${userId}`);
     await this.reportLikeRepository.save({
       reportId,
       userId,
     });
+    this.logger.log(`END: likeReport`);
   }
 
   async createReport(report: ReportDomain): Promise<ReportDomain> {
+    this.logger.log(`START: createReport`);
+    this.logger.log(`Creating report with data: ${JSON.stringify(report)}`);
     const savedReport = await this.reportRepository.save(
       this.mapper.map(report, ReportDomain, ReportEntity),
     );
 
+    this.logger.log(`END: createReport`);
     return this.mapper.map(savedReport, ReportEntity, ReportDomain);
   }
 }

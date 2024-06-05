@@ -1,10 +1,7 @@
-import { Repository } from 'typeorm';
-
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
-import { UserEntity } from '@libs/users/entities/user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { UserService } from '@libs/users/services/user.service';
+import { USER_SERVICE } from '@libs/users/user.contants';
+import { Inject, Logger } from '@nestjs/common';
 
 import { IsUsernameExistsDTO } from './is-username-exists.dto';
 
@@ -12,23 +9,21 @@ export class IsUsernameExistsUseCase extends BaseUseCase<
   IsUsernameExistsDTO,
   boolean
 > {
+  private readonly logger = new Logger(IsUsernameExistsUseCase.name);
   constructor(
-    @InjectMapper()
-    private mapper: Mapper,
-    @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
+    @Inject(USER_SERVICE)
+    private userService: UserService,
   ) {
     super();
   }
 
   async execute(dto: IsUsernameExistsDTO): Promise<boolean> {
-    const isExists = await this.userRepository.exists({
-      where: {
-        username: dto.username,
-      },
-      withDeleted: true,
-    });
+    this.logger.log(`START: execute`);
+    this.logger.log(`dto: ${JSON.stringify(dto)}`);
 
-    return isExists;
+    const isExists = await this.userService.getUserByUsername(dto.username);
+
+    this.logger.log(`END: execute`);
+    return !!isExists;
   }
 }

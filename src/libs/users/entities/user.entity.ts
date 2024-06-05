@@ -35,9 +35,13 @@ export class UserEntity {
   @AutoMap()
   fcmToken?: string;
 
-  @Column({ default: true })
+  @Column({ name: 'is_active', default: true })
   @AutoMap()
   isActive: boolean;
+
+  @Column({ name: 'is_onboarded', default: false })
+  @AutoMap()
+  isOnboarded: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
   @AutoMap()
