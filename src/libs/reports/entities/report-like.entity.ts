@@ -26,8 +26,8 @@ export class ReportLikeEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: Date;
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true, default: null })
+  deletedAt: Date | null;
 
   @ManyToOne(() => ReportEntity, (report) => report.likes)
   @JoinColumn({ name: 'report_id' })

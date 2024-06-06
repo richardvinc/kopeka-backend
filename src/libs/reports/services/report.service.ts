@@ -1,5 +1,5 @@
 import * as GeoHash from 'ngeohash';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
@@ -36,6 +36,7 @@ export class ReportService {
     private readonly reportRepository: Repository<ReportEntity>,
     @InjectRepository(ReportLikeEntity)
     private readonly reportLikeRepository: Repository<ReportLikeEntity>,
+    private dataSource: DataSource,
   ) {}
 
   async getReportById(
@@ -132,7 +133,7 @@ export class ReportService {
       'user.id = report.reported_by_id',
     );
     qb.where('substring(report.geoHash, 0, :precission) IN(:...geoHashes)', {
-      precission: GEOHASH_SEARCH_PRECISSION,
+      precission: GEOHASH_SEARCH_PRECISSION + 1,
       geoHashes: [geoHash, ...neighbors],
     });
     if (excludedReportId) {
@@ -160,11 +161,82 @@ export class ReportService {
   async likeReport(reportId: string, userId: string): Promise<void> {
     this.logger.log(`START: likeReport`);
     this.logger.log(`Liking report with id: ${reportId} by user: ${userId}`);
-    await this.reportLikeRepository.save({
-      reportId,
-      userId,
-    });
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const exists = await queryRunner.manager
+        .getRepository(ReportLikeEntity)
+        .findOne({
+          where: {
+            reportId,
+            userId,
+          },
+        });
+
+      if (!exists) {
+        await queryRunner.manager.getRepository(ReportLikeEntity).save({
+          reportId,
+          userId,
+          deletedAt: null,
+        });
+
+        await queryRunner.manager.getRepository(ReportEntity).increment(
+          {
+            id: reportId,
+          },
+          'totalReaction',
+          1,
+        );
+      }
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      this.logger.error(`Error liking report: ${error}`);
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
     this.logger.log(`END: likeReport`);
+  }
+
+  async unlikeReport(reportId: string, userId: string): Promise<void> {
+    this.logger.log(`START: unlikeReport`);
+    this.logger.log(`Unliking report with id: ${reportId} by user: ${userId}`);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const exists = await queryRunner.manager
+        .getRepository(ReportLikeEntity)
+        .findOne({
+          where: {
+            reportId,
+            userId,
+          },
+        });
+      if (exists) {
+        await queryRunner.manager.getRepository(ReportLikeEntity).softDelete({
+          reportId,
+          userId,
+        });
+        await queryRunner.manager.getRepository(ReportEntity).decrement(
+          {
+            id: reportId,
+          },
+          'totalReaction',
+          1,
+        );
+      }
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      this.logger.error(`Error liking report: ${error}`);
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+
+    this.logger.log(`END: unlikeReport`);
   }
 
   async createReport(report: ReportDomain): Promise<ReportDomain> {

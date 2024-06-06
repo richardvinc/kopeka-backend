@@ -63,9 +63,9 @@ export class ReportEntity {
   @AutoMap()
   updatedAt: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at' })
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true, default: null })
   @AutoMap()
-  deletedAt: Date;
+  deletedAt: Date | null;
 
   @Column({ name: 'row_id' })
   @Generated('increment')

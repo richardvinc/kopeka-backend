@@ -87,6 +87,19 @@ export class ReportController {
 
   @Post('/:reportId/like')
   async likeReport(@User() user: IUserIdentity, @Param() dto: LikeReportDTO) {
-    return await this.likeReportUseCase.execute({ ...dto, userId: user.id });
+    return await this.likeReportUseCase.execute({
+      ...dto,
+      userId: user.id,
+      isLiked: true,
+    });
+  }
+
+  @Post('/:reportId/unlike')
+  async unlikeReport(@User() user: IUserIdentity, @Param() dto: LikeReportDTO) {
+    return await this.likeReportUseCase.execute({
+      ...dto,
+      userId: user.id,
+      isLiked: false,
+    });
   }
 }

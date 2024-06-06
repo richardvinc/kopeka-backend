@@ -24,10 +24,10 @@ export class LikeReportUseCase extends BaseUseCase<LikeReportDTO, void> {
     const report = await this.reportService.getReportById(reportId, userId);
     if (!report) throw new ReportError.ReportNotFound();
 
-    if (!report.isReacted) {
+    if (dto.isLiked) {
       await this.reportService.likeReport(reportId, userId);
     } else {
-      this.logger.log(`User already liked the report. Ignoring...`);
+      await this.reportService.unlikeReport(reportId, userId);
     }
 
     this.logger.log(`END: execute`);
