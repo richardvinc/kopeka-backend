@@ -41,7 +41,7 @@ export class CreateReportUseCase extends BaseUseCase<
       totalReaction: 0,
       location: {
         lat: dto.lat,
-        lon: dto.lon,
+        lng: dto.lon,
         geoHash,
       },
     });

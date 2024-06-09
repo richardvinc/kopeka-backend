@@ -6,12 +6,12 @@ import { REPORT_CATEGORY, REPORT_CONDITION } from '../report.constant';
 
 export class GPSLocation {
   lat: number;
-  lon: number;
+  lng: number;
   geoHash: string;
 
   constructor(lat: number, lon: number, geoHash: string) {
     this.lat = lat;
-    this.lon = lon;
+    this.lng = lon;
     this.geoHash = geoHash;
   }
 }

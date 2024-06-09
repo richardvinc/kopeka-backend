@@ -10,6 +10,8 @@ import {
 } from 'typeorm';
 
 import { AutoMap } from '@automapper/classes';
+import { CampaignMembershipEntity } from '@libs/campaign/entities/campaign-membership.entity';
+import { CampaignEntity } from '@libs/campaign/entities/campaign.entity';
 import { ReportLikeEntity } from '@libs/reports/entities/report-like.entity';
 import { ReportEntity } from '@libs/reports/entities/report.entity';
 
@@ -62,4 +64,12 @@ export class UserEntity {
   @OneToMany(() => ReportLikeEntity, (like) => like.report)
   @JoinColumn({ name: 'id', referencedColumnName: 'userId' })
   likes: ReportLikeEntity[];
+
+  @OneToMany(() => CampaignEntity, (campaign) => campaign.creator)
+  @JoinColumn({ name: 'id', referencedColumnName: 'userId' })
+  campaignCreated: CampaignEntity[];
+
+  @OneToMany(() => CampaignMembershipEntity, (campaign) => campaign.member)
+  @JoinColumn({ name: 'id', referencedColumnName: 'userId' })
+  memberships: CampaignMembershipEntity[];
 }

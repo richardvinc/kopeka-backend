@@ -22,4 +22,4 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   providers: [],
   exports: [],
 })
-export class DatabaseModule {}
+export class TypeOrmDatabaseModule {}

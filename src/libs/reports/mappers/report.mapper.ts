@@ -33,7 +33,7 @@ export class ReportMapperProfile extends AutomapperProfile {
         ),
         forMember(
           (destination) => destination.lon,
-          mapFrom((source) => source.location.lon),
+          mapFrom((source) => source.location.lng),
         ),
         forMember(
           (destination) => destination.geoHash,
@@ -62,7 +62,7 @@ export class ReportMapperProfile extends AutomapperProfile {
           mapFrom((source) => {
             return {
               lat: source.location.lat,
-              lon: source.location.lon,
+              lon: source.location.lng,
               geo_hash: source.location.geoHash,
             };
           }),

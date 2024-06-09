@@ -4,8 +4,10 @@ import { classes } from '@automapper/classes';
 import { CamelCaseNamingConvention } from '@automapper/core';
 import { AutomapperModule } from '@automapper/nestjs';
 import { AuthModule } from '@libs/auth/auth.module';
+import { CampaignModule } from '@libs/campaign/campaign.module';
 import { AppConfigModule } from '@libs/config/app';
-import { DatabaseModule } from '@libs/database/database.module';
+import { AzureCosmosDBConfigModule } from '@libs/providers/azure-cosmos-db/azure-cosmos-db.module';
+import { TypeOrmDatabaseModule } from '@libs/providers/typeorm/typeorm-database.module';
 import { ReportModule } from '@libs/reports/report.module';
 import { UserModule } from '@libs/users/user.module';
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
@@ -21,7 +23,9 @@ import { AppController } from './app.controller';
     }),
     AppConfigModule,
     AuthModule,
-    DatabaseModule,
+    TypeOrmDatabaseModule,
+    AzureCosmosDBConfigModule,
+    CampaignModule,
     UserModule,
     ReportModule,
   ],
