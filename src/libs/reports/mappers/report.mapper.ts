@@ -28,12 +28,12 @@ export class ReportMapperProfile extends AutomapperProfile {
         ReportDomain,
         ReportEntity,
         forMember(
-          (destination) => destination.lat,
-          mapFrom((source) => source.location.lat),
+          (destination) => destination.latitude,
+          mapFrom((source) => source.location.latitude),
         ),
         forMember(
-          (destination) => destination.lon,
-          mapFrom((source) => source.location.lng),
+          (destination) => destination.longitude,
+          mapFrom((source) => source.location.longitude),
         ),
         forMember(
           (destination) => destination.geoHash,
@@ -61,8 +61,8 @@ export class ReportMapperProfile extends AutomapperProfile {
           (destination) => destination.location,
           mapFrom((source) => {
             return {
-              lat: source.location.lat,
-              lon: source.location.lng,
+              latitude: source.location.latitude,
+              longitude: source.location.longitude,
               geo_hash: source.location.geoHash,
             };
           }),
@@ -80,7 +80,11 @@ export class ReportMapperProfile extends AutomapperProfile {
         forMember(
           (destination) => destination.location,
           mapFrom((source) => {
-            return new GPSLocation(source.lat, source.lon, source.geoHash);
+            return new GPSLocation(
+              source.latitude,
+              source.longitude,
+              source.geoHash,
+            );
           }),
         ),
         forMember(
@@ -104,8 +108,8 @@ export class ReportMapperProfile extends AutomapperProfile {
           (destination) => destination.location,
           mapFrom((source) => {
             return {
-              lat: source.lat,
-              lon: source.lon,
+              latitude: source.latitude,
+              longitude: source.longitude,
               geo_hash: source.geoHash,
             };
           }),

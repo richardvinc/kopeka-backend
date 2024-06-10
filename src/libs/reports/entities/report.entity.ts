@@ -23,13 +23,13 @@ export class ReportEntity {
   @AutoMap()
   id: string;
 
-  @Column({ type: 'float8' })
+  @Column({ type: 'float8', default: 0 })
   @AutoMap()
-  lat: number;
+  latitude: number;
 
-  @Column({ type: 'float8' })
+  @Column({ type: 'float8', default: 0 })
   @AutoMap()
-  lon: number;
+  longitude: number;
 
   @Column({ name: 'geo_hash' })
   @AutoMap()

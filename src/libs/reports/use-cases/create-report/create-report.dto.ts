@@ -8,10 +8,10 @@ import {
 
 export class CreateReportDTO {
   @IsLatitude()
-  lat: number;
+  latitude: number;
 
   @IsLongitude()
-  lon: number;
+  longitude: number;
 
   @IsUrl()
   @Expose({ name: 'image_url' })

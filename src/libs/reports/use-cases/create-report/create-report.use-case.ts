@@ -31,8 +31,8 @@ export class CreateReportUseCase extends BaseUseCase<
     this.logger.log(`dto: ${JSON.stringify(dto)}`);
 
     const geoHash: string = GeoHash.encode(
-      dto.lat,
-      dto.lon,
+      dto.latitude,
+      dto.longitude,
       GEOHASH_PRECISSION,
     );
 
@@ -40,8 +40,8 @@ export class CreateReportUseCase extends BaseUseCase<
       ...dto,
       totalReaction: 0,
       location: {
-        lat: dto.lat,
-        lng: dto.lon,
+        latitude: dto.latitude,
+        longitude: dto.longitude,
         geoHash,
       },
     });

@@ -5,10 +5,10 @@ import { UserPresenterMinimalDTO } from '@libs/users/presenters/user.presenter';
 
 export class GPSLocationDTO {
   @AutoMap()
-  lat: number;
+  latitude: number;
 
   @AutoMap()
-  lon: number;
+  longitude: number;
 
   @AutoMap()
   // for some reason, @Expose doesnt work here

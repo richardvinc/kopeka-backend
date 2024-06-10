@@ -5,13 +5,13 @@ import { UserDomain } from '@libs/users/domains/user.domain';
 import { REPORT_CATEGORY, REPORT_CONDITION } from '../report.constant';
 
 export class GPSLocation {
-  lat: number;
-  lng: number;
+  latitude: number;
+  longitude: number;
   geoHash: string;
 
   constructor(lat: number, lon: number, geoHash: string) {
-    this.lat = lat;
-    this.lng = lon;
+    this.latitude = lat;
+    this.longitude = lon;
     this.geoHash = geoHash;
   }
 }

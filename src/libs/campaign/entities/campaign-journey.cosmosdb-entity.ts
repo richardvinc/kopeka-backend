@@ -1,5 +1,9 @@
 import { AutoMap } from '@automapper/classes';
-import { CosmosPartitionKey, Point } from '@nestjs/azure-database';
+import {
+  CosmosDateTime,
+  CosmosPartitionKey,
+  Point,
+} from '@nestjs/azure-database';
 
 @CosmosPartitionKey('campaignShortcode')
 export class CampaignJourneyCosmosdbEntity {
@@ -16,5 +20,6 @@ export class CampaignJourneyCosmosdbEntity {
   location: Point;
 
   @AutoMap()
+  @CosmosDateTime()
   createdAt: Date;
 }

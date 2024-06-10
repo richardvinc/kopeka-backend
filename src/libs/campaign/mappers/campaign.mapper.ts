@@ -85,7 +85,10 @@ export class CampaignMapperProfile extends AutomapperProfile {
             return {
               type: 'Point',
               // coordinate order is longitude, latitude
-              coordinates: [source.location.lng, source.location.lat],
+              coordinates: [
+                source.location.longitude,
+                source.location.latitude,
+              ],
             };
           }),
         ),
@@ -98,8 +101,8 @@ export class CampaignMapperProfile extends AutomapperProfile {
           (destination) => destination.location,
           mapFrom((source) => {
             return {
-              lng: source.location.coordinates[0],
-              lat: source.location.coordinates[1],
+              longitude: source.location.coordinates[0],
+              latitude: source.location.coordinates[1],
             };
           }),
         ),
