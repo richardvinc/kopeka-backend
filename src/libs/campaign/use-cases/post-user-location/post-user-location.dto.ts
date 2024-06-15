@@ -1,6 +1,6 @@
 import { IsLatitude, IsLongitude, IsString, Length } from 'class-validator';
 
-export class PostUserLocation {
+export class PostUserLocationDTO {
   @IsString()
   @Length(6)
   campaignShortcode: string;

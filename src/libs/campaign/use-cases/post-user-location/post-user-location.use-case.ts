@@ -7,27 +7,25 @@ import { CampaignError } from '@libs/campaign/errors/campaign.error';
 import { CampaignJourneyService } from '@libs/campaign/services/campaign-journey.service';
 import { CampaignService } from '@libs/campaign/services/campaign.service';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
-import { Inject, Logger } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 
-import { PostUserLocation } from './post-user-location.dto';
+import { PostUserLocationDTO } from './post-user-location.dto';
 
 export class PostUserLocationUseCase extends BaseUseCase<
-  PostUserLocation,
+  PostUserLocationDTO,
   void
 > {
-  private readonly logger = new Logger(PostUserLocationUseCase.name);
   constructor(
     @Inject(CAMPAIGN_SERVICE)
     private campaignService: CampaignService,
     @Inject(CAMPAIGN_JOURNEY_SERVICE)
     private campaignJourneyService: CampaignJourneyService,
   ) {
-    super();
+    super(PostUserLocationUseCase.name);
   }
 
-  async execute(dto: PostUserLocation): Promise<void> {
-    this.logger.log(`START: execute`);
-    this.logger.log(`dto: ${JSON.stringify(dto)}`);
+  async execute(dto: PostUserLocationDTO): Promise<void> {
+    this.logStartExecution(dto);
 
     const campaign = await this.campaignService.getCampaignByShortcode(
       dto.campaignShortcode,
@@ -48,6 +46,6 @@ export class PostUserLocationUseCase extends BaseUseCase<
 
     await this.campaignJourneyService.postUserLocation(campaignJourney);
 
-    this.logger.log(`END: execute`);
+    this.logEndExecution();
   }
 }

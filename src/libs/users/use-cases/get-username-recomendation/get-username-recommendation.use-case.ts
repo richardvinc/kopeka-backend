@@ -1,6 +1,5 @@
 import { BaseResult } from '@libs/shared/presenters/result.presenter';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
-import { Logger } from '@nestjs/common';
 
 import { GetUsernameRecommendationDTO } from './get-username-recommendation.dto';
 
@@ -8,17 +7,14 @@ export class GetUsernameRecommendationUseCase extends BaseUseCase<
   GetUsernameRecommendationDTO,
   string[]
 > {
-  private readonly logger = new Logger(GetUsernameRecommendationUseCase.name);
-
   constructor() {
-    super();
+    super(GetUsernameRecommendationUseCase.name);
   }
 
   async execute(
     dto: GetUsernameRecommendationDTO,
   ): Promise<BaseResult<string[]>> {
-    this.logger.log(`START: execute`);
-    this.logger.log(`dto: ${JSON.stringify(dto)}`);
+    this.logStartExecution(dto);
 
     const firstWords = ['happy', 'sad', 'angry', 'excited', 'bored'];
     const secondWords = [
@@ -67,7 +63,7 @@ export class GetUsernameRecommendationUseCase extends BaseUseCase<
       .map((v) => v.v)
       .slice(0, 5);
 
-    this.logger.log(`END: execute`);
+    this.logEndExecution();
     return this.ok(recommendations);
   }
 }

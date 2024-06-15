@@ -7,7 +7,7 @@ import { CampaignService } from '@libs/campaign/services/campaign.service';
 import { BaseResult } from '@libs/shared/presenters/result.presenter';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
 import { DateUtils } from '@libs/shared/utils/date.utils';
-import { Inject, Logger } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 
 import { CreateCampaignDTO } from './create-campaign.dto';
 
@@ -15,21 +15,19 @@ export class CreateCampaignUseCase extends BaseUseCase<
   CreateCampaignDTO,
   CampaignPresenterDTO
 > {
-  private readonly logger = new Logger(CreateCampaignUseCase.name);
   constructor(
     @Inject(CAMPAIGN_SERVICE)
     private campaignService: CampaignService,
     @InjectMapper()
     private readonly mapper: Mapper,
   ) {
-    super();
+    super(CreateCampaignUseCase.name);
   }
 
   async execute(
     dto: CreateCampaignDTO,
   ): Promise<BaseResult<CampaignPresenterDTO>> {
-    this.logger.log(`START: execute`);
-    this.logger.log(`dto: ${JSON.stringify(dto)}`);
+    this.logStartExecution(dto);
 
     const campaignShortcode =
       await this.campaignService.generateUniqueCampaignShortcode();
@@ -44,7 +42,7 @@ export class CreateCampaignUseCase extends BaseUseCase<
 
     const entity = await this.campaignService.createCampaign(campaign);
 
-    this.logger.log(`END: execute`);
+    this.logEndExecution();
     return this.ok(
       this.mapper.map(entity, CampaignDomain, CampaignPresenterDTO),
     );

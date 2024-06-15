@@ -10,7 +10,7 @@ import { PaginationTokenService } from '@libs/reports/services/pagination-token.
 import { ReportService } from '@libs/reports/services/report.service';
 import { BaseResult } from '@libs/shared/presenters/result.presenter';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
-import { Inject, Logger } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 
 import { GetLatestReportsDTO } from './get-latest-reports.dto';
 
@@ -18,8 +18,6 @@ export class GetLatestReportsUseCase extends BaseUseCase<
   GetLatestReportsDTO,
   ReportPresenterDTO[]
 > {
-  private readonly logger = new Logger(GetLatestReportsUseCase.name);
-
   constructor(
     @InjectMapper()
     private readonly mapper: Mapper,
@@ -28,14 +26,13 @@ export class GetLatestReportsUseCase extends BaseUseCase<
     @Inject(PAGINATION_TOKEN_SERVICE)
     private readonly paginationTokenService: PaginationTokenService,
   ) {
-    super();
+    super(GetLatestReportsUseCase.name);
   }
 
   async execute(
     dto: GetLatestReportsDTO,
   ): Promise<BaseResult<ReportPresenterDTO[]>> {
-    this.logger.log(`START: execute`);
-    this.logger.log(`dto: ${JSON.stringify(dto)}`);
+    this.logStartExecution(dto);
 
     const { userId, nextToken, excludedReportIds } = dto;
     const reports = await this.reportService.getLatestReports({
@@ -49,7 +46,7 @@ export class GetLatestReportsUseCase extends BaseUseCase<
 
     const lastReport = reports[reports.length - 1];
 
-    this.logger.log(`END: execute`);
+    this.logEndExecution();
     return this.paginatedOk(
       this.mapper.mapArray(reports, ReportDomain, ReportPresenterDTO),
       lastReport

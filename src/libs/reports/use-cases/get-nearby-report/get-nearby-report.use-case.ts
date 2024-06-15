@@ -13,7 +13,7 @@ import {
 import { ReportService } from '@libs/reports/services/report.service';
 import { BaseResult } from '@libs/shared/presenters/result.presenter';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
-import { Inject, Logger } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 
 import { GetNearbyReportDTO } from './get-nearby-report.dto';
 
@@ -21,22 +21,19 @@ export class GetNearbyReportUseCase extends BaseUseCase<
   GetNearbyReportDTO,
   ReportPresenterDTO[]
 > {
-  private readonly logger = new Logger(GetNearbyReportUseCase.name);
-
   constructor(
     @InjectMapper()
     private mapper: Mapper,
     @Inject(REPORT_SERVICE)
     private reportService: ReportService,
   ) {
-    super();
+    super(GetNearbyReportUseCase.name);
   }
 
   async execute(
     dto: GetNearbyReportDTO,
   ): Promise<BaseResult<ReportPresenterDTO[]>> {
-    this.logger.log(`START: execute`);
-    this.logger.log(`dto: ${JSON.stringify(dto)}`);
+    this.logStartExecution(dto);
 
     const { geoHash, reportId, userId, latitude, longitude } = dto;
 
@@ -59,7 +56,7 @@ export class GetNearbyReportUseCase extends BaseUseCase<
       limit: NEARBY_REPORT_LIMIT,
     });
 
-    this.logger.log(`END: execute`);
+    this.logEndExecution();
     return this.ok(
       this.mapper.mapArray(reports, ReportDomain, ReportPresenterDTO),
     );

@@ -6,7 +6,7 @@ import { UserDomain } from '@libs/users/domains/user.domain';
 import { UserPresenterDTO } from '@libs/users/presenters/user.presenter';
 import { UserService } from '@libs/users/services/user.service';
 import { USER_SERVICE } from '@libs/users/user.contants';
-import { Inject, Logger } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 
 import { UserError } from '../../errors/user.error';
 import { GetUserByIdDTO } from './get-user-by-id.dto';
@@ -15,23 +15,22 @@ export class GetUserByIdUseCase extends BaseUseCase<
   GetUserByIdDTO,
   UserPresenterDTO
 > {
-  private readonly logger = new Logger(GetUserByIdUseCase.name);
   constructor(
     @InjectMapper()
     private mapper: Mapper,
     @Inject(USER_SERVICE)
     private userService: UserService,
   ) {
-    super();
+    super(GetUserByIdUseCase.name);
   }
 
   async execute(dto: GetUserByIdDTO): Promise<BaseResult<UserPresenterDTO>> {
-    this.logger.log(`START: execute`);
-    this.logger.log(`dto: ${JSON.stringify(dto)}`);
+    this.logStartExecution(dto);
+
     const user = await this.userService.getUserById(dto.id);
     if (!user) throw new UserError.UserNotFound();
 
-    this.logger.log(`END: execute`);
+    this.logEndExecution();
     return this.ok(this.mapper.map(user, UserDomain, UserPresenterDTO));
   }
 }

@@ -1,9 +1,19 @@
+import { Logger } from '@nestjs/common';
+
 import {
   BasePaginatedResult,
   BaseResult,
 } from '../presenters/result.presenter';
 
 export abstract class BaseUseCase<TRequest, TResponse> {
+  useCaseName: string;
+  logger: Logger;
+
+  constructor(useCaseName: string) {
+    this.useCaseName = useCaseName;
+    this.logger = new Logger(this.useCaseName);
+  }
+
   abstract execute(
     dto: TRequest,
   ):
@@ -30,5 +40,14 @@ export abstract class BaseUseCase<TRequest, TResponse> {
       data,
       nextToken,
     };
+  }
+
+  protected logStartExecution(dto: TRequest): void {
+    this.logger.log(`START: execute`);
+    this.logger.log(`dto: ${JSON.stringify(dto)}`);
+  }
+
+  protected logEndExecution(): void {
+    this.logger.log(`END: execute`);
   }
 }

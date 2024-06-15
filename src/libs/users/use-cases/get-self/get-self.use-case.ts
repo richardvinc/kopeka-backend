@@ -7,30 +7,29 @@ import { UserError } from '@libs/users/errors/user.error';
 import { UserPresenterDTO } from '@libs/users/presenters/user.presenter';
 import { UserService } from '@libs/users/services/user.service';
 import { USER_SERVICE } from '@libs/users/user.contants';
-import { Inject, Logger } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 
 import { GetSelfDTO } from './get-self.dto';
 
 export class GetSelfUseCase extends BaseUseCase<GetSelfDTO, UserPresenterDTO> {
-  private readonly logger = new Logger(GetSelfUseCase.name);
   constructor(
     @InjectMapper()
     private mapper: Mapper,
     @Inject(USER_SERVICE)
     private userService: UserService,
   ) {
-    super();
+    super(GetSelfUseCase.name);
   }
 
   async execute(dto: GetSelfDTO): Promise<BaseResult<UserPresenterDTO>> {
-    this.logger.log(`START: execute`);
-    this.logger.log(`dto: ${JSON.stringify(dto)}`);
+    this.logStartExecution(dto);
+
     const user = await this.userService.getUserByFirebaseUid(dto.firebaseUid);
     if (!user) {
       throw new UserError.UserNotFound();
     }
 
-    this.logger.log(`END: execute`);
+    this.logEndExecution();
     return this.ok(this.mapper.map(user, UserDomain, UserPresenterDTO));
   }
 }

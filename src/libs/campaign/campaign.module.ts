@@ -17,6 +17,9 @@ import { CampaignMapperProfile } from './mappers/campaign.mapper';
 import { CampaignJourneyCosmosdbRepository } from './repositories/campaign-journey.cosmosb.repository';
 import { CampaignJourneyService } from './services/campaign-journey.service';
 import { CampaignService } from './services/campaign.service';
+import { CreateCampaignUseCase } from './use-cases/create-campaign/create-campaign.use-case';
+import { GetCampaignByIdUseCase } from './use-cases/get-campaign-by-id/get-campaign-by-id.use-case';
+import { PostUserLocationUseCase } from './use-cases/post-user-location/post-user-location.use-case';
 
 const Repositories: Provider[] = [
   {
@@ -36,6 +39,12 @@ const Services: Provider[] = [
   },
 ];
 
+const UseCases = [
+  GetCampaignByIdUseCase,
+  CreateCampaignUseCase,
+  PostUserLocationUseCase,
+];
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([CampaignEntity, CampaignMembershipEntity]),
@@ -47,7 +56,7 @@ const Services: Provider[] = [
     ]),
   ],
   controllers: [CampaignController, CampaignJourneyController],
-  providers: [...Repositories, ...Services, CampaignMapperProfile],
+  providers: [...Repositories, ...Services, ...UseCases, CampaignMapperProfile],
   exports: [...Services],
 })
 export class CampaignModule {}
