@@ -3,6 +3,8 @@ import { DataSource, Repository } from 'typeorm';
 
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
+import { CampaignEntity } from '@libs/campaign/entities/campaign.entity';
+import { CampaignError } from '@libs/campaign/errors/campaign.error';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -242,11 +244,39 @@ export class ReportService {
   async createReport(report: ReportDomain): Promise<ReportDomain> {
     this.logger.log(`START: createReport`);
     this.logger.log(`Creating report with data: ${JSON.stringify(report)}`);
-    const savedReport = await this.reportRepository.save(
-      this.mapper.map(report, ReportDomain, ReportEntity),
-    );
 
-    this.logger.log(`END: createReport`);
-    return this.mapper.map(savedReport, ReportEntity, ReportDomain);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      const savedReport = await this.reportRepository.save(
+        this.mapper.map(report, ReportDomain, ReportEntity),
+      );
+
+      // Update total reports in campaign
+      if (report.campaignId) {
+        const campaignEntity =
+          await queryRunner.manager.findOne<CampaignEntity>(CampaignEntity, {
+            where: {
+              id: report.campaignId,
+            },
+          });
+        if (!campaignEntity) {
+          throw new CampaignError.CampaignNotFound();
+        }
+        campaignEntity.totalReports += 1;
+        await queryRunner.manager.save<CampaignEntity>(campaignEntity);
+      }
+
+      await queryRunner.commitTransaction();
+      this.logger.log(`END: createReport`);
+      return this.mapper.map(savedReport, ReportEntity, ReportDomain);
+    } catch (error) {
+      this.logger.error(`Error creating report: ${error}`);
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 }

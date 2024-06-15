@@ -3,7 +3,7 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 
 import { GPSLocation } from '../domains/report.domain';
-import { GPSLocationDTO } from '../presenters/report.presenter';
+import { GPSLocationWithGeohashDTO } from '../presenters/report.presenter';
 
 @Injectable()
 export class GPSLocationMapperProfile extends AutomapperProfile {
@@ -13,8 +13,8 @@ export class GPSLocationMapperProfile extends AutomapperProfile {
 
   override get profile() {
     return (map) => {
-      createMap(map, GPSLocation, GPSLocationDTO);
-      createMap(map, GPSLocationDTO, GPSLocation);
+      createMap(map, GPSLocation, GPSLocationWithGeohashDTO);
+      createMap(map, GPSLocationWithGeohashDTO, GPSLocation);
     };
   }
 }

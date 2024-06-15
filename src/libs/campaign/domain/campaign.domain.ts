@@ -5,11 +5,15 @@ import { UserDomain } from '@libs/users/domains/user.domain';
 interface CampaignProps {
   campaignShortcode: string;
   createdById: string;
+  totalCampaigners?: number;
+  totalReports?: number;
   expiredAt: Date;
   user?: UserDomain;
 }
 
-type UpdateableProps = Partial<Pick<CampaignProps, 'campaignShortcode'>>;
+type UpdateableProps = Partial<
+  Pick<CampaignProps, 'totalCampaigners' | 'totalReports'>
+>;
 
 export class CampaignDomain extends BaseDomain {
   @AutoMap()
@@ -17,6 +21,12 @@ export class CampaignDomain extends BaseDomain {
 
   @AutoMap()
   campaignShortcode: string;
+
+  @AutoMap()
+  totalCampaigners: number;
+
+  @AutoMap()
+  totalReports: number;
 
   @AutoMap()
   createdById: string;
@@ -29,7 +39,7 @@ export class CampaignDomain extends BaseDomain {
 
   constructor(props: CampaignProps, id?: string) {
     super(id);
-    Object.assign(this, { ...props });
+    Object.assign(this, { ...props, totalCampaigners: 0, totalReports: 0 });
   }
 
   public static create(props: CampaignProps, id?: string) {

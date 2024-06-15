@@ -11,7 +11,7 @@ import { UserEntity } from '@libs/users/entities/user.entity';
 import { UserPresenterMinimalDTO } from '@libs/users/presenters/user.presenter';
 import { Injectable } from '@nestjs/common';
 
-import { GPSLocation, ReportDomain } from '../domains/report.domain';
+import { GPSLocationWithGeoHash, ReportDomain } from '../domains/report.domain';
 import { ReportEntity } from '../entities/report.entity';
 import { ReportPresenterDTO } from '../presenters/report.presenter';
 
@@ -80,7 +80,7 @@ export class ReportMapperProfile extends AutomapperProfile {
         forMember(
           (destination) => destination.location,
           mapFrom((source) => {
-            return new GPSLocation(
+            return new GPSLocationWithGeoHash(
               source.latitude,
               source.longitude,
               source.geoHash,

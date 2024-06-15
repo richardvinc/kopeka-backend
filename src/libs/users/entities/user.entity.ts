@@ -4,6 +4,7 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -37,6 +38,10 @@ export class UserEntity {
   @AutoMap()
   fcmToken?: string;
 
+  @Column({ name: 'active_campaign_id', nullable: true })
+  @AutoMap()
+  activeCampaignId?: string;
+
   @Column({ name: 'is_active', default: true })
   @AutoMap()
   isActive: boolean;
@@ -58,18 +63,22 @@ export class UserEntity {
   deletedAt: Date;
 
   @OneToMany(() => ReportEntity, (report) => report.user)
-  @JoinColumn({ name: 'id', referencedColumnName: 'reportedById' })
+  @JoinColumn({ name: 'id', referencedColumnName: 'reported_by_id' })
   reports: ReportEntity[];
 
   @OneToMany(() => ReportLikeEntity, (like) => like.report)
-  @JoinColumn({ name: 'id', referencedColumnName: 'userId' })
+  @JoinColumn({ name: 'id', referencedColumnName: 'user_id' })
   likes: ReportLikeEntity[];
 
   @OneToMany(() => CampaignEntity, (campaign) => campaign.creator)
-  @JoinColumn({ name: 'id', referencedColumnName: 'userId' })
+  @JoinColumn({ name: 'id', referencedColumnName: 'user_id' })
   campaignCreated: CampaignEntity[];
 
   @OneToMany(() => CampaignMembershipEntity, (campaign) => campaign.member)
-  @JoinColumn({ name: 'id', referencedColumnName: 'userId' })
+  @JoinColumn({ name: 'id', referencedColumnName: 'user_id' })
   memberships: CampaignMembershipEntity[];
+
+  @ManyToOne(() => CampaignEntity, (campaign) => campaign.activeCampaigners)
+  @JoinColumn({ name: 'active_campaign_id', referencedColumnName: 'id' })
+  activeCampaign?: CampaignEntity | null;
 }

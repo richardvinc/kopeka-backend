@@ -18,6 +18,10 @@ export class UserPresenterDTO {
   profilePictureUrl?: string;
 
   @AutoMap()
+  @Expose({ name: 'active_campaign_id' })
+  activeCampaignId?: string;
+
+  @AutoMap()
   @Expose({ name: 'is_onboarded' })
   isOnboarded: boolean;
 

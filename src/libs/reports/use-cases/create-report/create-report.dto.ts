@@ -1,5 +1,12 @@
 import { Expose } from 'class-transformer';
-import { IsEnum, IsLatitude, IsLongitude, IsUrl } from 'class-validator';
+import {
+  IsEnum,
+  IsLatitude,
+  IsLongitude,
+  IsOptional,
+  IsUrl,
+  IsUUID,
+} from 'class-validator';
 
 import {
   REPORT_CATEGORY,
@@ -30,6 +37,10 @@ export class CreateReportDTO {
     ).join(', ')}`,
   })
   condition: REPORT_CONDITION;
+
+  @IsUUID()
+  @IsOptional()
+  campaignId?: string;
 
   reportedById: string;
 }

@@ -47,6 +47,10 @@ export class ReportEntity {
   @AutoMap()
   reportedById: string;
 
+  @Column({ name: 'campaign_id', nullable: true })
+  @AutoMap()
+  campaignId?: string;
+
   @Column()
   @AutoMap()
   category: string;

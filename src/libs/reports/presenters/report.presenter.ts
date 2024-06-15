@@ -3,7 +3,7 @@ import { Expose } from 'class-transformer';
 import { AutoMap } from '@automapper/classes';
 import { UserPresenterMinimalDTO } from '@libs/users/presenters/user.presenter';
 
-export class GPSLocationDTO {
+export class GPSLocationWithGeohashDTO {
   @AutoMap()
   latitude: number;
 
@@ -19,12 +19,16 @@ export class ReportPresenterDTO {
   @AutoMap()
   id: string;
 
-  @AutoMap(() => GPSLocationDTO)
-  location: GPSLocationDTO;
+  @AutoMap(() => GPSLocationWithGeohashDTO)
+  location: GPSLocationWithGeohashDTO;
 
   @AutoMap()
   @Expose({ name: 'image_url' })
   imageUrl: string;
+
+  @AutoMap()
+  @Expose({ name: 'campaign_id' })
+  campaignId: string | null;
 
   @AutoMap()
   @Expose({ name: 'total_reaction' })

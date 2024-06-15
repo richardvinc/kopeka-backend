@@ -56,19 +56,19 @@ export class CampaignController {
     await this.campaignRepository.save(campaignEntity);
 
     const locations: GPSLocation[] = [
-      { latitude: -6.294428, longitude: 106.634762, geoHash: 'aaaaaaa' },
-      { latitude: -6.295111, longitude: 106.635663, geoHash: 'aaaaaaa' },
-      { latitude: -6.293234, longitude: 106.635792, geoHash: 'aaaaaaa' },
-      { latitude: -6.292274, longitude: 106.635341, geoHash: 'aaaaaaa' },
-      { latitude: -6.292786, longitude: 106.637058, geoHash: 'aaaaaaa' },
-      { latitude: -6.293191, longitude: 106.638066, geoHash: 'aaaaaaa' },
-      { latitude: -6.294577, longitude: 106.637766, geoHash: 'aaaaaaa' },
-      { latitude: -6.295942, longitude: 106.637508, geoHash: 'aaaaaaa' },
-      { latitude: -6.297052, longitude: 106.637916, geoHash: 'aaaaaaa' },
-      { latitude: -6.297734, longitude: 106.639482, geoHash: 'aaaaaaa' },
-      { latitude: -6.298289, longitude: 106.640555, geoHash: 'aaaaaaa' },
-      { latitude: -6.29863, longitude: 106.641757, geoHash: 'aaaaaaa' },
-      { latitude: -6.298736, longitude: 106.643753, geoHash: 'aaaaaaa' },
+      { latitude: -6.294428, longitude: 106.63476 },
+      { latitude: -6.295111, longitude: 106.635663 },
+      { latitude: -6.293234, longitude: 106.635792 },
+      { latitude: -6.292274, longitude: 106.635341 },
+      { latitude: -6.292786, longitude: 106.637058 },
+      { latitude: -6.293191, longitude: 106.638066 },
+      { latitude: -6.294577, longitude: 106.637766 },
+      { latitude: -6.295942, longitude: 106.637508 },
+      { latitude: -6.297052, longitude: 106.637916 },
+      { latitude: -6.297734, longitude: 106.639482 },
+      { latitude: -6.298289, longitude: 106.640555 },
+      { latitude: -6.29863, longitude: 106.641757 },
+      { latitude: -6.298736, longitude: 106.643753 },
     ];
 
     for (const location of locations) {

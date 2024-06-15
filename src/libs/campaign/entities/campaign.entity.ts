@@ -26,6 +26,14 @@ export class CampaignEntity {
   campaignShortcode: string;
 
   @AutoMap()
+  @Column({ name: 'total_campaigners', default: 0, type: 'int' })
+  totalCampaigners: number;
+
+  @AutoMap()
+  @Column({ name: 'total_reports', default: 0, type: 'int' })
+  totalReports: number;
+
+  @AutoMap()
   @Column({ name: 'created_by_id' })
   createdById: string;
 
@@ -54,6 +62,10 @@ export class CampaignEntity {
     () => CampaignMembershipEntity,
     (membership) => membership.campaign,
   )
-  @JoinColumn({ name: 'id', referencedColumnName: 'campaignId' })
+  @JoinColumn({ name: 'id', referencedColumnName: 'campaign_id' })
   memberships: CampaignMembershipEntity[];
+
+  @OneToMany(() => UserEntity, (user) => user.activeCampaign)
+  @JoinColumn({ name: 'id', referencedColumnName: 'active_campaign_id' })
+  activeCampaigners: UserEntity[];
 }

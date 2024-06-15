@@ -8,12 +8,18 @@ interface UserProps {
   isActive: boolean;
   isOnboarded?: boolean;
   fcmToken?: string;
+  activeCampaignId?: string | null;
 }
 
 type UpdateableProps = Partial<
   Pick<
     UserProps,
-    'username' | 'fcmToken' | 'profilePictureUrl' | 'isActive' | 'isOnboarded'
+    | 'username'
+    | 'fcmToken'
+    | 'profilePictureUrl'
+    | 'isActive'
+    | 'isOnboarded'
+    | 'activeCampaignId'
   >
 >;
 
@@ -36,9 +42,16 @@ export class UserDomain extends BaseDomain {
   @AutoMap()
   fcmToken?: string | undefined;
 
+  @AutoMap()
+  activeCampaignId: string | null;
+
   constructor(props: UserProps, id?: string) {
     super(id);
-    Object.assign(this, { ...props, isOnboarded: false });
+    Object.assign(this, {
+      ...props,
+      isOnboarded: false,
+      activeCampaignId: null,
+    });
   }
 
   public static create(props: UserProps, id?: string) {

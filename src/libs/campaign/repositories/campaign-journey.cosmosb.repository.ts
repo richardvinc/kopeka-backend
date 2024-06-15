@@ -18,6 +18,7 @@ export class CampaignJourneyCosmosdbRepository
     @InjectModel(CampaignJourneyCosmosdbEntity)
     private eventContainer: Container,
   ) {}
+
   async findAll(): Promise<CampaignJourneyDomain[]> {
     const { resources } = await this.eventContainer.items
       .query<CampaignJourneyCosmosdbEntity>({
@@ -63,9 +64,9 @@ export class CampaignJourneyCosmosdbRepository
       : null;
   }
 
-  async create(report: CampaignJourneyDomain): Promise<CampaignJourneyDomain> {
+  async create(journey: CampaignJourneyDomain): Promise<CampaignJourneyDomain> {
     const entity = this.mapper.map(
-      report,
+      journey,
       CampaignJourneyDomain,
       CampaignJourneyCosmosdbEntity,
     );
@@ -82,9 +83,9 @@ export class CampaignJourneyCosmosdbRepository
     );
   }
 
-  async update(report: CampaignJourneyDomain): Promise<CampaignJourneyDomain> {
+  async update(journey: CampaignJourneyDomain): Promise<CampaignJourneyDomain> {
     const entity = this.mapper.map(
-      report,
+      journey,
       CampaignJourneyDomain,
       CampaignJourneyCosmosdbEntity,
     );
