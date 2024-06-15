@@ -16,8 +16,6 @@ export class CreateUsernameDto {
   })
   username: string;
 
-  firebaseUid: string;
-
   @IsUrl()
   @Expose({ name: 'profile_picture_url' })
   profilePictureUrl: string;
@@ -26,4 +24,6 @@ export class CreateUsernameDto {
   @IsOptional()
   @Expose({ name: 'fcm_token' })
   fcmToken?: string;
+
+  firebaseUid: string;
 }

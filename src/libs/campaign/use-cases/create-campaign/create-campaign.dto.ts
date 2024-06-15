@@ -1,11 +1,9 @@
-import { IsDate, IsOptional, IsUUID } from 'class-validator';
+import { IsDate, IsOptional } from 'class-validator';
 
 export class CreateCampaignDTO {
   @IsDate()
   @IsOptional()
   expiredAt?: Date;
 
-  @IsUUID()
-  @IsOptional()
-  userId?: string;
+  userId: string;
 }

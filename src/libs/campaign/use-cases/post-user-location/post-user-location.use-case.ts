@@ -39,7 +39,7 @@ export class PostUserLocationUseCase extends BaseUseCase<
 
     const campaignJourney = new CampaignJourneyDomain({
       campaignShortcode: dto.campaignShortcode,
-      userId: dto.userId!,
+      userId: dto.userId,
       location: {
         latitude: dto.latitude,
         longitude: dto.longitude,

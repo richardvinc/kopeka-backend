@@ -38,7 +38,7 @@ export class CreateCampaignUseCase extends BaseUseCase<
 
     const campaign = new CampaignDomain({
       expiredAt,
-      createdById: dto.userId!,
+      createdById: dto.userId,
       campaignShortcode,
     });
 

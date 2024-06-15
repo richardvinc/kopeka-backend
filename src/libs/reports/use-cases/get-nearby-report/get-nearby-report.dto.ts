@@ -28,7 +28,5 @@ export class GetNearbyReportDTO {
   @IsOptional()
   longitude?: number;
 
-  @IsUUID()
-  @IsOptional()
   userId?: string;
 }

@@ -8,7 +8,5 @@ export class LikeReportDTO {
   @IsOptional()
   readonly isLiked: boolean;
 
-  @IsUUID()
-  @IsOptional()
   readonly userId: string;
 }

@@ -1,11 +1,4 @@
-import {
-  IsLatitude,
-  IsLongitude,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Length,
-} from 'class-validator';
+import { IsLatitude, IsLongitude, IsString, Length } from 'class-validator';
 
 export class PostUserLocation {
   @IsString()
@@ -18,7 +11,5 @@ export class PostUserLocation {
   @IsLongitude()
   longitude: number;
 
-  @IsUUID()
-  @IsOptional()
-  userId?: string;
+  userId: string;
 }

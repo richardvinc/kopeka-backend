@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserDTO {
   @IsBoolean()
@@ -17,7 +17,5 @@ export class UpdateUserDTO {
   @Expose({ name: 'fcm_token' })
   fcmToken?: string;
 
-  @IsUUID()
-  @IsOptional()
   userId: string;
 }

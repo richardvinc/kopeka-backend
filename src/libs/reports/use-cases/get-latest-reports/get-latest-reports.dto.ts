@@ -10,7 +10,5 @@ export class GetLatestReportsDTO {
   @IsOptional()
   excludedReportIds?: string[];
 
-  @IsUUID()
-  @IsOptional()
   userId: string;
 }
