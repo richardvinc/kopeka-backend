@@ -16,6 +16,14 @@ export class CampaignPresenterDTO {
   createdBy: UserPresenterMinimalDTO;
 
   @AutoMap()
+  @Expose({ name: 'total_campaigners' })
+  totalCampaigners: number;
+
+  @AutoMap()
+  @Expose({ name: 'total_reports' })
+  totalReports: number;
+
+  @AutoMap()
   @Expose({ name: 'expired_at' })
   expiredAt: string;
 
