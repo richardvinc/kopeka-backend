@@ -5,7 +5,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { PostUserLocationDTO } from './use-cases/post-user-location/post-user-location.dto';
 import { PostUserLocationUseCase } from './use-cases/post-user-location/post-user-location.use-case';
 
-@Controller('campaign-journey')
+@Controller('campaigns/journey')
 export class CampaignJourneyController {
   constructor(private postUserLocationUseCase: PostUserLocationUseCase) {}
 

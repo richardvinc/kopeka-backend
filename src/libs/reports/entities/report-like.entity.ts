@@ -20,14 +20,19 @@ export class ReportLikeEntity {
   @PrimaryColumn({ name: 'report_id' })
   reportId: string;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+  updatedAt?: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at', nullable: true, default: null })
-  deletedAt: Date | null;
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    type: 'timestamptz',
+    nullable: true,
+    default: null,
+  })
+  deletedAt?: Date;
 
   @ManyToOne(() => ReportEntity, (report) => report.likes)
   @JoinColumn({ name: 'report_id' })

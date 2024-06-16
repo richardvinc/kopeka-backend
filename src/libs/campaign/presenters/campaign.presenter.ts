@@ -33,9 +33,9 @@ export class CampaignPresenterDTO {
 
   @AutoMap()
   @Expose({ name: 'updated_at' })
-  updatedAt: string;
+  updatedAt?: string;
 
   @AutoMap()
   @Expose({ name: 'deleted_at' })
-  deletedAt: string | null;
+  deletedAt?: string | null;
 }

@@ -48,6 +48,7 @@ export class CampaignService {
         new CampaignMembershipDomain({
           campaignId: savedCampaignEntity.id,
           userId: campaign.createdById,
+          isCreator: true,
         }),
         CampaignMembershipDomain,
         CampaignMembershipEntity,
@@ -87,10 +88,10 @@ export class CampaignService {
     }
   }
 
-  async joinCampaign(campaignId: string, userId: string) {
+  async joinCampaign(campaignShortcode: string, userId: string) {
     this.logger.log(`START: joinCampaign`);
     this.logger.log(
-      `Joining campaign with id: ${campaignId} by user: ${userId}`,
+      `Joining campaign with code: ${campaignShortcode} by user: ${userId}`,
     );
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -100,11 +101,11 @@ export class CampaignService {
       const campaignEntity = await queryRunner.manager.findOne<CampaignEntity>(
         CampaignEntity,
         {
-          where: { id: campaignId },
+          where: { campaignShortcode },
         },
       );
       if (!campaignEntity) {
-        this.logger.error(`Campaign not found: ${campaignId}`);
+        this.logger.error(`Campaign not found: ${campaignShortcode}`);
         throw new CampaignError.CampaignNotFound();
       }
       const campaignDomain = this.mapper.map(
@@ -139,7 +140,7 @@ export class CampaignService {
 
       // register user as campaign member
       const campaignMembershipDomain = new CampaignMembershipDomain({
-        campaignId,
+        campaignId: campaignDomain.id,
         userId,
       });
       await queryRunner.manager.save(
@@ -151,7 +152,7 @@ export class CampaignService {
       );
 
       // set user active campaign id
-      userDomain.update({ activeCampaignId: campaignId });
+      userDomain.update({ activeCampaignId: campaignShortcode });
       await queryRunner.manager.save<UserEntity>(
         this.mapper.map(userDomain, UserDomain, UserEntity),
       );
@@ -167,10 +168,10 @@ export class CampaignService {
     }
   }
 
-  async leaveCampaign(campaignId: string, userId: string) {
+  async leaveCampaign(campaignShortcode: string, userId: string) {
     this.logger.log(`START: leaveCampaign`);
     this.logger.log(
-      `Leaving campaign with id: ${campaignId} by user: ${userId}`,
+      `Leaving campaign with code: ${campaignShortcode} by user: ${userId}`,
     );
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -180,11 +181,11 @@ export class CampaignService {
       const campaignEntity = await queryRunner.manager.findOne<CampaignEntity>(
         CampaignEntity,
         {
-          where: { id: campaignId },
+          where: { campaignShortcode: campaignShortcode },
         },
       );
       if (!campaignEntity) {
-        this.logger.error(`Campaign not found: ${campaignId}`);
+        this.logger.error(`Campaign not found: ${campaignShortcode}`);
         throw new CampaignError.CampaignNotFound();
       }
       const campaignDomain = this.mapper.map(
@@ -221,13 +222,13 @@ export class CampaignService {
       await queryRunner.manager.softDelete<CampaignMembershipEntity>(
         CampaignMembershipEntity,
         {
-          campaignId,
+          campaignId: campaignDomain.id,
           userId,
         },
       );
 
       // set user active campaign id
-      userDomain.update({ activeCampaignId: null });
+      userDomain.update({ activeCampaignId: undefined });
       await queryRunner.manager.save<UserEntity>(
         this.mapper.map(userDomain, UserDomain, UserEntity),
       );
@@ -267,7 +268,7 @@ export class CampaignService {
 
   async generateUniqueCampaignShortcode() {
     let result = '';
-    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     const charactersLength = characters.length;
 
     while (!result || (await this.checkIfShortcodeExists(result))) {

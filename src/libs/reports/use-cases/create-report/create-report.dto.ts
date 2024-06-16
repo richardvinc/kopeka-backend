@@ -40,6 +40,7 @@ export class CreateReportDTO {
 
   @IsUUID()
   @IsOptional()
+  @Expose({ name: 'campaign_id' })
   campaignId?: string;
 
   reportedById: string;

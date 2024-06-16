@@ -21,6 +21,8 @@ import { GetNearbyReportDTO } from './use-cases/get-nearby-report/get-nearby-rep
 import { GetNearbyReportUseCase } from './use-cases/get-nearby-report/get-nearby-report.use-case';
 import { GetReportByIdDTO } from './use-cases/get-report-by-id/get-report-by-id.dto';
 import { GetReportByIdUseCase } from './use-cases/get-report-by-id/get-report-by-id.use-case';
+import { GetReportsByCampaignIdDTO } from './use-cases/get-reports-by-campaign-id/get-reports-by-campaign-id.dto';
+import { GetReportsByCampaignIdUseCase } from './use-cases/get-reports-by-campaign-id/get-reports-by-campaign-id.use-case';
 import { LikeReportDTO } from './use-cases/like-report/like-report.dto';
 import { LikeReportUseCase } from './use-cases/like-report/like-report.use-case';
 
@@ -30,6 +32,7 @@ export class ReportController {
   constructor(
     private createReportUseCase: CreateReportUseCase,
     private getReportByIdUseCase: GetReportByIdUseCase,
+    private getReportByCampaignIdUseCase: GetReportsByCampaignIdUseCase,
     private getNearbyReportsUseCase: GetNearbyReportUseCase,
     private likeReportUseCase: LikeReportUseCase,
     private getLatestReportsUseCase: GetLatestReportsUseCase,
@@ -50,6 +53,17 @@ export class ReportController {
   @Get('/image-upload-url')
   async getImageUploadURL(@Query() dto: GetImageUploadUrlDTO) {
     return await this.getImageUploadURLUseCase.execute({ ...dto });
+  }
+
+  @Get('/campaign/:campaignId')
+  async getReportsByCampaignId(
+    @User() user: IUserIdentity,
+    @Param() dto: GetReportsByCampaignIdDTO,
+  ) {
+    return await this.getReportByCampaignIdUseCase.execute({
+      ...dto,
+      userId: user.id,
+    });
   }
 
   @Get('/nearby')

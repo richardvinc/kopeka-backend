@@ -14,9 +14,11 @@ import { CampaignEntity } from './campaign.entity';
 
 @Entity({ name: 'campaign_membership' })
 export class CampaignMembershipEntity {
+  @AutoMap()
   @PrimaryColumn({ name: 'campaign_id' })
   campaignId: string;
 
+  @AutoMap()
   @PrimaryColumn({ name: 'user_id' })
   userId: string;
 
@@ -24,17 +26,22 @@ export class CampaignMembershipEntity {
   @Column({ name: 'is_creator', default: false })
   isCreator: boolean;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   @AutoMap()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   @AutoMap()
-  updatedAt: Date;
+  updatedAt?: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at', nullable: true, default: null })
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    type: 'timestamptz',
+    nullable: true,
+    default: null,
+  })
   @AutoMap()
-  deletedAt: Date | null;
+  deletedAt?: Date;
 
   @ManyToOne(() => CampaignEntity, (campaign) => campaign.memberships)
   campaign: CampaignEntity;

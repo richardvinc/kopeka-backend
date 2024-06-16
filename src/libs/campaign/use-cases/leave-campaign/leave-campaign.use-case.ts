@@ -15,7 +15,7 @@ export class LeaveCampaignUseCase extends BaseUseCase<LeaveCampaignDTO, void> {
 
   async execute(dto: LeaveCampaignDTO): Promise<void> {
     this.logStartExecution(dto);
-    await this.campaignService.leaveCampaign(dto.campaignId, dto.userId);
+    await this.campaignService.leaveCampaign(dto.campaignshortcode, dto.userId);
     this.logEndExecution();
   }
 }

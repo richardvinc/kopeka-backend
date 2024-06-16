@@ -1,9 +1,7 @@
 import { IsString, Length } from 'class-validator';
 
-export class JoinCampaignDTO {
+export class GetCampaignByShortcodeDTO {
   @IsString()
   @Length(6)
   campaignShortcode: string;
-
-  userId: string;
 }

@@ -15,7 +15,7 @@ export class JoinCampaignUseCase extends BaseUseCase<JoinCampaignDTO, void> {
 
   async execute(dto: JoinCampaignDTO): Promise<void> {
     this.logStartExecution(dto);
-    await this.campaignService.joinCampaign(dto.campaignId, dto.userId);
+    await this.campaignService.joinCampaign(dto.campaignShortcode, dto.userId);
     this.logEndExecution();
   }
 }

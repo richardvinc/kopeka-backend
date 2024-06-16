@@ -8,7 +8,7 @@ interface UserProps {
   isActive: boolean;
   isOnboarded?: boolean;
   fcmToken?: string;
-  activeCampaignId?: string | null;
+  activeCampaignId?: string;
 }
 
 type UpdateableProps = Partial<
@@ -40,17 +40,17 @@ export class UserDomain extends BaseDomain {
   isActive: boolean;
 
   @AutoMap()
-  fcmToken?: string | undefined;
+  fcmToken?: string;
 
   @AutoMap()
-  activeCampaignId: string | null;
+  activeCampaignId?: string;
 
   constructor(props: UserProps, id?: string) {
     super(id);
     Object.assign(this, {
-      ...props,
       isOnboarded: false,
       activeCampaignId: null,
+      ...props,
     });
   }
 

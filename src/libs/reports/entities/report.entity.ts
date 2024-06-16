@@ -59,17 +59,22 @@ export class ReportEntity {
   @AutoMap()
   condition: string;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   @AutoMap()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   @AutoMap()
-  updatedAt: Date;
+  updatedAt?: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at', nullable: true, default: null })
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    type: 'timestamptz',
+    nullable: true,
+    default: null,
+  })
   @AutoMap()
-  deletedAt: Date | null;
+  deletedAt?: Date;
 
   @Column({ name: 'row_id' })
   @Generated('increment')

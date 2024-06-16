@@ -38,7 +38,7 @@ export class UserEntity {
   @AutoMap()
   fcmToken?: string;
 
-  @Column({ name: 'active_campaign_id', nullable: true })
+  @Column({ name: 'active_campaign_id', nullable: true, default: null })
   @AutoMap()
   activeCampaignId?: string;
 
@@ -50,17 +50,27 @@ export class UserEntity {
   @AutoMap()
   isOnboarded: boolean;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   @AutoMap()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn({
+    name: 'updated_at',
+    type: 'timestamptz',
+    nullable: true,
+    default: null,
+  })
   @AutoMap()
-  updatedAt: Date;
+  updatedAt?: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at' })
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    type: 'timestamptz',
+    nullable: true,
+    default: null,
+  })
   @AutoMap()
-  deletedAt: Date;
+  deletedAt?: Date;
 
   @OneToMany(() => ReportEntity, (report) => report.user)
   @JoinColumn({ name: 'id', referencedColumnName: 'reported_by_id' })

@@ -19,6 +19,9 @@ import { CampaignJourneyService } from './services/campaign-journey.service';
 import { CampaignService } from './services/campaign.service';
 import { CreateCampaignUseCase } from './use-cases/create-campaign/create-campaign.use-case';
 import { GetCampaignByIdUseCase } from './use-cases/get-campaign-by-id/get-campaign-by-id.use-case';
+import { GetCampaignByShortcodeUseCase } from './use-cases/get-campaign-by-shortcode/get-campaign-by-shortcode.use-case';
+import { JoinCampaignUseCase } from './use-cases/join-campaign/join-campaign.use-case';
+import { LeaveCampaignUseCase } from './use-cases/leave-campaign/leave-campaign.use-case';
 import { PostUserLocationUseCase } from './use-cases/post-user-location/post-user-location.use-case';
 
 const Repositories: Provider[] = [
@@ -41,7 +44,10 @@ const Services: Provider[] = [
 
 const UseCases = [
   GetCampaignByIdUseCase,
+  GetCampaignByShortcodeUseCase,
   CreateCampaignUseCase,
+  JoinCampaignUseCase,
+  LeaveCampaignUseCase,
   PostUserLocationUseCase,
 ];
 

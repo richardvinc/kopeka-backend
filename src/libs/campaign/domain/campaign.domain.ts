@@ -39,7 +39,7 @@ export class CampaignDomain extends BaseDomain {
 
   constructor(props: CampaignProps, id?: string) {
     super(id);
-    Object.assign(this, { ...props, totalCampaigners: 0, totalReports: 0 });
+    Object.assign(this, { totalCampaigners: 0, totalReports: 0, ...props });
   }
 
   public static create(props: CampaignProps, id?: string) {

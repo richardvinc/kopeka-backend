@@ -73,6 +73,39 @@ export class ReportService {
     return this.mapper.map(report, ReportEntity, ReportDomain);
   }
 
+  async getReportByCampaignId(
+    campaignId: string,
+    userId?: string,
+  ): Promise<ReportDomain[]> {
+    this.logger.log(`START: getReportByCampaignId`);
+    this.logger.log(`Getting report by campaign id: ${campaignId}`);
+    const qb = await this.reportRepository.createQueryBuilder('report');
+    qb.leftJoinAndSelect(
+      'report.user',
+      'user',
+      'user.id = report.reported_by_id',
+    );
+    qb.where('report.campaign_id = :campaignId', { campaignId });
+    qb.limit(10);
+
+    if (userId) {
+      qb.leftJoin('report.likes', 'like', 'like.userId = :userId', { userId });
+      qb.addSelect(
+        'CASE WHEN COUNT(like.report_id) > 0 THEN true ELSE false END',
+        'isReacted',
+      );
+      qb.addGroupBy('report.id');
+      qb.addGroupBy('user.id');
+    }
+
+    const reports = await qb.getMany();
+    this.logger.log(`query: ${qb.getQuery()}`);
+    if (!reports) throw new ReportError.ReportNotFound();
+
+    this.logger.log(`END: getReportByCampaignId`);
+    return this.mapper.mapArray(reports, ReportEntity, ReportDomain);
+  }
+
   async getLatestReports(
     filter: GetLatestReportsFilter,
   ): Promise<ReportDomain[]> {
@@ -181,7 +214,7 @@ export class ReportService {
         await queryRunner.manager.getRepository(ReportLikeEntity).save({
           reportId,
           userId,
-          deletedAt: null,
+          deletedAt: undefined,
         });
 
         await queryRunner.manager.getRepository(ReportEntity).increment(

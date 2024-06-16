@@ -1,8 +1,9 @@
-import { IsUUID } from 'class-validator';
+import { IsString, Length } from 'class-validator';
 
 export class LeaveCampaignDTO {
-  @IsUUID()
-  campaignId: string;
+  @IsString()
+  @Length(6)
+  campaignshortcode: string;
 
   userId: string;
 }

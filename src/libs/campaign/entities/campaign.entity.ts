@@ -38,20 +38,25 @@ export class CampaignEntity {
   createdById: string;
 
   @AutoMap()
-  @Column({ name: 'expired_at' })
+  @Column({ name: 'expired_at', type: 'timestamptz' })
   expiredAt: Date;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   @AutoMap()
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   @AutoMap()
-  updatedAt: Date;
+  updatedAt?: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at', nullable: true, default: null })
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    type: 'timestamptz',
+    nullable: true,
+    default: null,
+  })
   @AutoMap()
-  deletedAt: Date | null;
+  deletedAt?: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.campaignCreated, { eager: true })
   @JoinColumn({ name: 'created_by_id' })

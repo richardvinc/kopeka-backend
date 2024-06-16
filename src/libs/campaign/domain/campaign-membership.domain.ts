@@ -4,6 +4,7 @@ import { BaseDomain } from '@libs/shared/domains/base-domain';
 interface CampaignMembershipProps {
   campaignId: string;
   userId: string;
+  isCreator?: boolean;
 }
 
 export class CampaignMembershipDomain extends BaseDomain {
@@ -18,7 +19,7 @@ export class CampaignMembershipDomain extends BaseDomain {
 
   constructor(props: CampaignMembershipProps, id?: string) {
     super(id);
-    Object.assign(this, { ...props });
+    Object.assign(this, { ...props, isCreator: props.isCreator ?? false });
   }
 
   public static create(props: CampaignMembershipProps, id?: string) {
