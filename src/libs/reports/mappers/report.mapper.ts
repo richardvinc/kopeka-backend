@@ -6,6 +6,7 @@ import {
   Mapper,
 } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { DateUtils } from '@libs/shared/utils/date.utils';
 import { UserDomain } from '@libs/users/domains/user.domain';
 import { UserEntity } from '@libs/users/entities/user.entity';
 import { UserPresenterMinimalDTO } from '@libs/users/presenters/user.presenter';
@@ -70,6 +71,16 @@ export class ReportMapperProfile extends AutomapperProfile {
         forMember(
           (destination) => destination.isReacted,
           condition((source) => source.isReacted ?? false, false),
+        ),
+        forMember(
+          (destination) => destination.createdAt,
+          mapFrom((source) => DateUtils.toEpoch(source.createdAt)),
+        ),
+        forMember(
+          (destination) => destination.updatedAt,
+          mapFrom((source) =>
+            source.updatedAt ? DateUtils.toEpoch(source.updatedAt) : undefined,
+          ),
         ),
       );
 

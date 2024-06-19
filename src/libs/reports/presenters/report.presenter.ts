@@ -50,9 +50,9 @@ export class ReportPresenterDTO {
 
   @AutoMap()
   @Expose({ name: 'created_at' })
-  createdAt: string;
+  createdAt: number;
 
   @AutoMap()
   @Expose({ name: 'updated_at' })
-  updatedAt: string | null;
+  updatedAt: number;
 }

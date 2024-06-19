@@ -42,9 +42,9 @@ export abstract class BaseUseCase<TRequest, TResponse> {
     };
   }
 
-  protected logStartExecution(dto: TRequest): void {
+  protected logStartExecution(dto?: TRequest): void {
     this.logger.log(`START: execute`);
-    this.logger.log(`dto: ${JSON.stringify(dto)}`);
+    if (dto) this.logger.log(`dto: ${JSON.stringify(dto)}`);
   }
 
   protected logEndExecution(): void {

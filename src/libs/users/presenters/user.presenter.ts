@@ -26,16 +26,20 @@ export class UserPresenterDTO {
   isOnboarded: boolean;
 
   @AutoMap()
+  @Expose({ name: 'is_admin' })
+  isAdmin: boolean;
+
+  @AutoMap()
   @Expose({ name: 'created_at' })
-  createdAt: string;
+  createdAt: number;
 
   @AutoMap()
   @Expose({ name: 'updated_at' })
-  updatedAt?: string;
+  updatedAt?: number;
 
   @AutoMap()
   @Expose({ name: 'deleted_at' })
-  deletedAt?: string;
+  deletedAt?: number;
 }
 
 export class UserPresenterMinimalDTO {

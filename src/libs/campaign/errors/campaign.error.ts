@@ -11,6 +11,12 @@ export namespace CampaignError {
     }
   }
 
+  export class CannotLeaveAsCampaignHost extends BaseDomainError {
+    constructor() {
+      super(domain, new Error('campaign host cannot leave campaign'));
+    }
+  }
+
   export class UserAlreadyInAnotherCampaign extends BaseDomainError {
     constructor() {
       super(domain, new Error('user already registered in another campaign'));

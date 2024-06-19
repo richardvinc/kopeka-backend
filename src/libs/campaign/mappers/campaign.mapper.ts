@@ -1,5 +1,6 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { DateUtils } from '@libs/shared/utils/date.utils';
 import { UserDomain } from '@libs/users/domains/user.domain';
 import { UserEntity } from '@libs/users/entities/user.entity';
 import { UserPresenterMinimalDTO } from '@libs/users/presenters/user.presenter';
@@ -57,6 +58,16 @@ export class CampaignMapperProfile extends AutomapperProfile {
             this.mapper.map(source.user, UserDomain, UserPresenterMinimalDTO),
           ),
         ),
+        forMember(
+          (destination) => destination.createdAt,
+          mapFrom((source) => DateUtils.toEpoch(source.createdAt)),
+        ),
+        forMember(
+          (destination) => destination.updatedAt,
+          mapFrom((source) =>
+            source.updatedAt ? DateUtils.toEpoch(source.updatedAt) : undefined,
+          ),
+        ),
       );
 
       createMap(
@@ -71,6 +82,16 @@ export class CampaignMapperProfile extends AutomapperProfile {
               UserEntity,
               UserPresenterMinimalDTO,
             ),
+          ),
+        ),
+        forMember(
+          (destination) => destination.createdAt,
+          mapFrom((source) => DateUtils.toEpoch(source.createdAt)),
+        ),
+        forMember(
+          (destination) => destination.updatedAt,
+          mapFrom((source) =>
+            source.updatedAt ? DateUtils.toEpoch(source.updatedAt) : undefined,
           ),
         ),
       );

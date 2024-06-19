@@ -12,6 +12,7 @@ import { ReportModule } from '@libs/reports/report.module';
 import { UserModule } from '@libs/users/user.module';
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
 
 import { AppController } from './app.controller';
 
@@ -22,6 +23,7 @@ import { AppController } from './app.controller';
       namingConventions: new CamelCaseNamingConvention(),
     }),
     AppConfigModule,
+    ScheduleModule.forRoot(),
     AuthModule,
     TypeOrmDatabaseModule,
     AzureCosmosDBConfigModule,

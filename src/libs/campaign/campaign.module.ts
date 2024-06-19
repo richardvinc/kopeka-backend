@@ -1,3 +1,4 @@
+import { UserModule } from '@libs/users/user.module';
 import { AzureCosmosDbModule } from '@nestjs/azure-database';
 import { Module, Provider } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -18,6 +19,7 @@ import { CampaignJourneyCosmosdbRepository } from './repositories/campaign-journ
 import { CampaignJourneyService } from './services/campaign-journey.service';
 import { CampaignService } from './services/campaign.service';
 import { CreateCampaignUseCase } from './use-cases/create-campaign/create-campaign.use-case';
+import { EndExpiredCampaignsUseCase } from './use-cases/end-expired-campaigns/end-expired-campaigns.use-case';
 import { GetCampaignByIdUseCase } from './use-cases/get-campaign-by-id/get-campaign-by-id.use-case';
 import { GetCampaignByShortcodeUseCase } from './use-cases/get-campaign-by-shortcode/get-campaign-by-shortcode.use-case';
 import { JoinCampaignUseCase } from './use-cases/join-campaign/join-campaign.use-case';
@@ -49,6 +51,7 @@ const UseCases = [
   JoinCampaignUseCase,
   LeaveCampaignUseCase,
   PostUserLocationUseCase,
+  EndExpiredCampaignsUseCase,
 ];
 
 @Module({
@@ -60,6 +63,7 @@ const UseCases = [
         dto: CampaignJourneyCosmosdbEntity,
       },
     ]),
+    UserModule,
   ],
   controllers: [CampaignController, CampaignJourneyController],
   providers: [...Repositories, ...Services, ...UseCases, CampaignMapperProfile],

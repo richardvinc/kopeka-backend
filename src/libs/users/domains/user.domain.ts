@@ -6,9 +6,10 @@ interface UserProps {
   firebaseUid: string;
   profilePictureUrl?: string;
   isActive: boolean;
+  isAdmin?: boolean;
   isOnboarded?: boolean;
   fcmToken?: string;
-  activeCampaignId?: string;
+  activeCampaignId?: string | null;
 }
 
 type UpdateableProps = Partial<
@@ -38,6 +39,9 @@ export class UserDomain extends BaseDomain {
 
   @AutoMap()
   isActive: boolean;
+
+  @AutoMap()
+  isAdmin: boolean;
 
   @AutoMap()
   fcmToken?: string;

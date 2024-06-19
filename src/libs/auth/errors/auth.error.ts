@@ -42,4 +42,10 @@ export namespace AuthErrors {
       super(new Error('User not found'));
     }
   }
+
+  export class Unauthorized extends BaseAuthError {
+    constructor() {
+      super(new Error('User is not authorized to access this resource'));
+    }
+  }
 }

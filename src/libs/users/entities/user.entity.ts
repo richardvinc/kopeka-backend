@@ -46,6 +46,10 @@ export class UserEntity {
   @AutoMap()
   isActive: boolean;
 
+  @Column({ name: 'is_admin', default: false })
+  @AutoMap()
+  isAdmin: boolean;
+
   @Column({ name: 'is_onboarded', default: false })
   @AutoMap()
   isOnboarded: boolean;

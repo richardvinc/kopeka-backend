@@ -6,7 +6,7 @@ export class BaseDomain {
   @AutoMap()
   readonly id: string;
   @AutoMap()
-  createdAt?: Date;
+  createdAt: Date;
   @AutoMap()
   updatedAt?: Date;
   @AutoMap()

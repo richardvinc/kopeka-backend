@@ -31,8 +31,8 @@ export class CreateCampaignUseCase extends BaseUseCase<
 
     const campaignShortcode =
       await this.campaignService.generateUniqueCampaignShortcode();
-    // default 24 hours from now
-    const expiredAt = dto.expiredAt || DateUtils.addHours(new Date(), 24);
+    // default to end of the day
+    const expiredAt = dto.expiredAt || DateUtils.getLocalEndOfDay(new Date());
 
     const campaign = new CampaignDomain({
       expiredAt,

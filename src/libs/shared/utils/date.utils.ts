@@ -14,4 +14,15 @@ export class DateUtils {
   static getCurrentLocalDate(): Date {
     return DateTime.now().setZone(this.locale).toJSDate();
   }
+
+  static getLocalEndOfDay(date: Date): Date {
+    return DateTime.fromJSDate(date)
+      .endOf('day')
+      .setZone(this.locale)
+      .toJSDate();
+  }
+
+  static toEpoch(date: Date): number {
+    return DateTime.fromJSDate(date).toMillis();
+  }
 }
