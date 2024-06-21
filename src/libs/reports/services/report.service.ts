@@ -36,8 +36,6 @@ export class ReportService {
     private mapper: Mapper,
     @InjectRepository(ReportEntity)
     private readonly reportRepository: Repository<ReportEntity>,
-    @InjectRepository(ReportLikeEntity)
-    private readonly reportLikeRepository: Repository<ReportLikeEntity>,
     private dataSource: DataSource,
   ) {}
 
@@ -71,6 +69,55 @@ export class ReportService {
 
     this.logger.log(`END: getReportById`);
     return this.mapper.map(report, ReportEntity, ReportDomain);
+  }
+
+  async deleteReport(reportId: string, userId: string): Promise<void> {
+    this.logger.log(`START: deleteReport`);
+    this.logger.log(`Delete report with id: ${reportId} by user: ${userId}`);
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      await queryRunner.manager.getRepository(ReportEntity).softDelete({
+        id: reportId,
+      });
+
+      // Update total reports in campaign
+      const report = await queryRunner.manager.findOne<ReportEntity>(
+        ReportEntity,
+        {
+          where: {
+            id: reportId,
+          },
+        },
+      );
+
+      if (report && report.campaignId) {
+        const campaignEntity =
+          await queryRunner.manager.findOne<CampaignEntity>(CampaignEntity, {
+            where: {
+              id: report.campaignId,
+            },
+          });
+        if (!campaignEntity) {
+          throw new CampaignError.CampaignNotFound();
+        }
+        campaignEntity.totalReports -= 1;
+        await queryRunner.manager.save<CampaignEntity>(campaignEntity);
+      }
+
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      this.logger.log(`Error deleting report: ${error}`);
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+
+    this.logger.log(`END: deleteReport`);
   }
 
   async getReportByCampaignId(

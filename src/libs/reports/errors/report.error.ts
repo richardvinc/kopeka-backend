@@ -9,4 +9,10 @@ export namespace ReportError {
       super(domain, 'not found');
     }
   }
+
+  export class CannotDeleteOthersReport extends BaseNotFoundError {
+    constructor() {
+      super(domain, 'cannot delete report of others user');
+    }
+  }
 }

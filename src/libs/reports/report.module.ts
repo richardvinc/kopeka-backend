@@ -18,6 +18,7 @@ import { PaginationTokenService } from './services/pagination-token.service';
 import { ReportImageStorageService } from './services/report-image-storage.service';
 import { ReportService } from './services/report.service';
 import { CreateReportUseCase } from './use-cases/create-report/create-report.use-case';
+import { DeleteReportUseCase } from './use-cases/delete-report/delete-report.use.case';
 import { GetImageUploadUrlUseCase } from './use-cases/get-image-upload-url/get-image-upload-url.use-case';
 import { GetLatestReportsUseCase } from './use-cases/get-latest-reports/get-latest-reports.use-case';
 import { GetNearbyReportUseCase } from './use-cases/get-nearby-report/get-nearby-report.use-case';
@@ -33,6 +34,7 @@ const useCases = [
   LikeReportUseCase,
   GetLatestReportsUseCase,
   GetImageUploadUrlUseCase,
+  DeleteReportUseCase,
 ];
 const mappers = [GPSLocationMapperProfile, ReportMapperProfile];
 const services: Provider[] = [

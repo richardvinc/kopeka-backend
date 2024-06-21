@@ -4,6 +4,7 @@ import { IUserIdentity } from '@libs/auth/interfaces/user.interface';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -13,6 +14,8 @@ import {
 
 import { CreateReportDTO } from './use-cases/create-report/create-report.dto';
 import { CreateReportUseCase } from './use-cases/create-report/create-report.use-case';
+import { DeleteReportDTO } from './use-cases/delete-report/delete-report.dto';
+import { DeleteReportUseCase } from './use-cases/delete-report/delete-report.use.case';
 import { GetImageUploadUrlDTO } from './use-cases/get-image-upload-url/get-image-upload-url.dto';
 import { GetImageUploadUrlUseCase } from './use-cases/get-image-upload-url/get-image-upload-url.use-case';
 import { GetLatestReportsDTO } from './use-cases/get-latest-reports/get-latest-reports.dto';
@@ -37,6 +40,7 @@ export class ReportController {
     private likeReportUseCase: LikeReportUseCase,
     private getLatestReportsUseCase: GetLatestReportsUseCase,
     private getImageUploadURLUseCase: GetImageUploadUrlUseCase,
+    private deleteReportUseCase: DeleteReportUseCase,
   ) {}
 
   @Post()
@@ -94,6 +98,17 @@ export class ReportController {
     @Param() dto: GetReportByIdDTO,
   ) {
     return await this.getReportByIdUseCase.execute({
+      ...dto,
+      userId: user.id,
+    });
+  }
+
+  @Delete('/:reportId')
+  async deleteReportById(
+    @User() user: IUserIdentity,
+    @Param() dto: DeleteReportDTO,
+  ) {
+    return await this.deleteReportUseCase.execute({
       ...dto,
       userId: user.id,
     });
