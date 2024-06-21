@@ -61,6 +61,10 @@ export class CampaignJourneyService {
           },
         ],
       },
+      arrows: true,
+      attribution: 'Koalisi Pejalan Kaki',
+      height: 300,
+      width: 400,
     });
     // save buffer as image
     // fs.writeFileSync(`./${campaignId}.png`, map);

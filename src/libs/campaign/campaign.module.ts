@@ -24,6 +24,7 @@ import { EndCampaignUseCase } from './use-cases/end-campaign/end-campaign.use-ca
 import { EndExpiredCampaignsUseCase } from './use-cases/end-expired-campaigns/end-expired-campaigns.use-case';
 import { GetCampaignByIdUseCase } from './use-cases/get-campaign-by-id/get-campaign-by-id.use-case';
 import { GetCampaignByShortcodeUseCase } from './use-cases/get-campaign-by-shortcode/get-campaign-by-shortcode.use-case';
+import { GetPastUserCampaignsUseCase } from './use-cases/get-past-user-campaigns/get-past-user-campaigns.use-case';
 import { JoinCampaignUseCase } from './use-cases/join-campaign/join-campaign.use-case';
 import { LeaveCampaignUseCase } from './use-cases/leave-campaign/leave-campaign.use-case';
 import { PostUserLocationUseCase } from './use-cases/post-user-location/post-user-location.use-case';
@@ -55,6 +56,7 @@ const UseCases = [
   LeaveCampaignUseCase,
   PostUserLocationUseCase,
   EndExpiredCampaignsUseCase,
+  GetPastUserCampaignsUseCase,
 ];
 
 @Module({

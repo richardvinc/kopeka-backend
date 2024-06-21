@@ -11,6 +11,10 @@ export class CampaignPresenterDTO {
   @Expose({ name: 'shortcode' })
   campaignShortcode: string;
 
+  @AutoMap()
+  @Expose({ name: 'image_url' })
+  campaignImage: string;
+
   @AutoMap(() => UserPresenterMinimalDTO)
   @Expose({ name: 'created_by' })
   createdBy: UserPresenterMinimalDTO;
@@ -22,6 +26,10 @@ export class CampaignPresenterDTO {
   @AutoMap()
   @Expose({ name: 'total_reports' })
   totalReports: number;
+
+  @AutoMap()
+  @Expose({ name: 'ended_at' })
+  endedAt: string;
 
   @AutoMap()
   @Expose({ name: 'expired_at' })

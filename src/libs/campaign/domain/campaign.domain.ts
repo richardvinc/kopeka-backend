@@ -8,12 +8,13 @@ interface CampaignProps {
   createdById: string;
   totalCampaigners?: number;
   totalReports?: number;
+  endedAt?: Date;
   expiredAt: Date;
   user?: UserDomain;
 }
 
 type UpdateableProps = Partial<
-  Pick<CampaignProps, 'totalCampaigners' | 'totalReports'>
+  Pick<CampaignProps, 'totalCampaigners' | 'totalReports' | 'endedAt'>
 >;
 
 export class CampaignDomain extends BaseDomain {
@@ -34,6 +35,9 @@ export class CampaignDomain extends BaseDomain {
 
   @AutoMap()
   createdById: string;
+
+  @AutoMap()
+  endedAt?: Date;
 
   @AutoMap()
   expiredAt: Date;

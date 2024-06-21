@@ -13,6 +13,7 @@ import { GetCampaignByIdDTO } from './use-cases/get-campaign-by-id/get-campaign-
 import { GetCampaignByIdUseCase } from './use-cases/get-campaign-by-id/get-campaign-by-id.use-case';
 import { GetCampaignByShortcodeDTO } from './use-cases/get-campaign-by-shortcode/get-campaign-by-shortcode.dto';
 import { GetCampaignByShortcodeUseCase } from './use-cases/get-campaign-by-shortcode/get-campaign-by-shortcode.use-case';
+import { GetPastUserCampaignsUseCase } from './use-cases/get-past-user-campaigns/get-past-user-campaigns.use-case';
 import { JoinCampaignDTO } from './use-cases/join-campaign/join-campaign.dto';
 import { JoinCampaignUseCase } from './use-cases/join-campaign/join-campaign.use-case';
 import { LeaveCampaignDTO } from './use-cases/leave-campaign/leave-campaign.dto';
@@ -29,11 +30,17 @@ export class CampaignController {
     private joinCampaignUseCase: JoinCampaignUseCase,
     private leaveCampaignUseCase: LeaveCampaignUseCase,
     private endExpiredCampaignsUseCase: EndExpiredCampaignsUseCase,
+    private getPastUserCampaignsUseCase: GetPastUserCampaignsUseCase,
   ) {}
 
   @Get('/id/:campaignId')
   async getCampaignById(@Param() dto: GetCampaignByIdDTO) {
     return await this.getCampaignByIdUseCase.execute({ ...dto });
+  }
+
+  @Get('/me/past')
+  async getPastCampaignsByUserId(@User() user: IUserIdentity) {
+    return await this.getPastUserCampaignsUseCase.execute({ userId: user.id });
   }
 
   @Get('/shortcode/:campaignShortcode')

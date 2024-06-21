@@ -254,6 +254,21 @@ export class CampaignService {
     return this.mapper.map(entity, CampaignEntity, CampaignDomain);
   }
 
+  async getCampaignsByUserId(
+    userId: string,
+    isExpiredOnly?: true,
+  ): Promise<CampaignDomain[]> {
+    this.logger.log(`START: getCampaignsByUserId`);
+    const entity = await this.campaignRepository.createQueryBuilder('campaign');
+    entity.innerJoinAndSelect('campaign.memberships', 'memberships');
+    entity.where('memberships.userId = :userId', { userId });
+    if (isExpiredOnly) entity.andWhere('campaign.endedAt IS NOT NULL');
+    const entities = await entity.getMany();
+
+    this.logger.log(`END: getCampaignsByUserId`);
+    return this.mapper.mapArray(entities, CampaignEntity, CampaignDomain);
+  }
+
   async getCampaignByShortcode(
     campaignShortcode: string,
   ): Promise<CampaignDomain | null> {
@@ -310,6 +325,19 @@ export class CampaignService {
     }
 
     try {
+      const campaign = await qr.manager.findOne<CampaignEntity>(
+        CampaignEntity,
+        {
+          where: { id: campaignId },
+        },
+      );
+      if (!campaign) {
+        this.logger.error(`Campaign not found: ${campaignId}`);
+        throw new CampaignError.CampaignNotFound();
+      }
+
+      campaign.endedAt = new Date();
+      await qr.manager.save<CampaignEntity>(campaign);
       const memberships =
         await this.dataSource.manager.find<CampaignMembershipEntity>(
           CampaignMembershipEntity,

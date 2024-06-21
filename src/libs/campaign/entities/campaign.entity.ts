@@ -42,6 +42,15 @@ export class CampaignEntity {
   createdById: string;
 
   @AutoMap()
+  @Column({
+    name: 'end_at',
+    type: 'timestamptz',
+    nullable: true,
+    default: null,
+  })
+  endedAt: Date;
+
+  @AutoMap()
   @Column({ name: 'expired_at', type: 'timestamptz' })
   expiredAt: Date;
 
