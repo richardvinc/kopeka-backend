@@ -17,6 +17,12 @@ export namespace CampaignError {
     }
   }
 
+  export class OnlyHostCanEndCampaign extends BaseDomainError {
+    constructor() {
+      super(domain, new Error('only host can end the campaign'));
+    }
+  }
+
   export class UserAlreadyInAnotherCampaign extends BaseDomainError {
     constructor() {
       super(domain, new Error('user already registered in another campaign'));

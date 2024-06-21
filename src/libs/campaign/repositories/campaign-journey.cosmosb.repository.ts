@@ -33,13 +33,13 @@ export class CampaignJourneyCosmosdbRepository
     );
   }
 
-  async findAllByShortcode(
-    shortcode: string,
+  async findAllByCampaignId(
+    campaignId: string,
   ): Promise<CampaignJourneyDomain[]> {
     const { resources } = await this.eventContainer.items
       .query<CampaignJourneyCosmosdbEntity>({
-        query: `SELECT * FROM ${CAMPAIGN_JOURNEY_TABLE_NAME} c WHERE c.campaignShortcode = @shortcode`,
-        parameters: [{ name: '@shortcode', value: shortcode }],
+        query: `SELECT * FROM ${CAMPAIGN_JOURNEY_TABLE_NAME} c WHERE c.campaignId = @campaignId`,
+        parameters: [{ name: '@campaignId', value: campaignId }],
       })
       .fetchAll();
 

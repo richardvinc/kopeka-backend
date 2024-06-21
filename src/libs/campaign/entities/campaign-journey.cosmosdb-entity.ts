@@ -5,13 +5,13 @@ import {
   Point,
 } from '@nestjs/azure-database';
 
-@CosmosPartitionKey('campaignShortcode')
+@CosmosPartitionKey('campaignId')
 export class CampaignJourneyCosmosdbEntity {
   @AutoMap()
   id: string;
 
   @AutoMap()
-  campaignShortcode: string;
+  campaignId: string;
 
   @AutoMap()
   userId: string;

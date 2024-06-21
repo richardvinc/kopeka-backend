@@ -36,4 +36,25 @@ export class AzureStorageService {
   public getStorageAccountName(): string {
     return this.configService.getOrThrow('STORAGE_ACCOUNT_NAME');
   }
+
+  public getFileAccessURL(containerName: string, blobName: string): string {
+    return `https://${this.getStorageAccountName()}.blob.core.windows.net/${containerName}/${blobName}`;
+  }
+
+  public async uploadCampaignJourneyImageToAzure(
+    containerName,
+    blobName: string,
+    blob: Buffer,
+  ): Promise<void> {
+    const blobService = await this.getBlobServiceInstance();
+    const containerClient = blobService.getContainerClient(containerName);
+    const blobClient = containerClient.getBlobClient(blobName);
+    const blockBlobClient = blobClient.getBlockBlobClient();
+
+    await blockBlobClient.uploadData(blob, {
+      blobHTTPHeaders: {
+        blobContentType: 'image/png',
+      },
+    });
+  }
 }

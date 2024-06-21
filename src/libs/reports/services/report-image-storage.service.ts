@@ -23,6 +23,9 @@ export class ReportImageStorageService {
   }
 
   async generateAccessURL(fileName: string): Promise<string> {
-    return `https://${this.storageAccountName}.blob.core.windows.net/reports/${fileName}`;
+    return this.azureStorageService.getFileAccessURL(
+      this.containerName,
+      fileName,
+    );
   }
 }

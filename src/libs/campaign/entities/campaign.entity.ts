@@ -26,6 +26,10 @@ export class CampaignEntity {
   campaignShortcode: string;
 
   @AutoMap()
+  @Column({ name: 'campaign_image', nullable: true, default: null })
+  campaignImage?: string;
+
+  @AutoMap()
   @Column({ name: 'total_campaigners', default: 0, type: 'int' })
   totalCampaigners: number;
 

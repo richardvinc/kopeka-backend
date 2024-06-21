@@ -258,10 +258,9 @@ export class ReportService {
         });
 
       if (!exists) {
-        await queryRunner.manager.getRepository(ReportLikeEntity).save({
+        await queryRunner.manager.getRepository(ReportLikeEntity).recover({
           reportId,
           userId,
-          deletedAt: undefined,
         });
 
         await queryRunner.manager.getRepository(ReportEntity).increment(

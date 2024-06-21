@@ -1,4 +1,4 @@
-import { DataSource, LessThanOrEqual, Repository } from 'typeorm';
+import { DataSource, LessThanOrEqual, QueryRunner, Repository } from 'typeorm';
 
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
@@ -281,36 +281,7 @@ export class CampaignService {
       this.logger.debug(campaigns);
 
       for (const campaign of campaigns) {
-        const memberships =
-          await this.dataSource.manager.find<CampaignMembershipEntity>(
-            CampaignMembershipEntity,
-            {
-              where: { campaignId: campaign.id },
-            },
-          );
-        this.logger.debug(`Found ${memberships.length} memberships`);
-
-        for (const membership of memberships) {
-          const userEntity = await queryRunner.manager.findOne<UserEntity>(
-            UserEntity,
-            {
-              where: { id: membership.userId },
-            },
-          );
-          if (!userEntity) {
-            this.logger.error(`User not found: ${membership.userId}`);
-            throw new UserError.UserNotFound();
-          }
-          const userDomain = this.mapper.map(
-            userEntity,
-            UserEntity,
-            UserDomain,
-          );
-          userDomain.update({ activeCampaignId: null });
-          await this.dataSource.manager.save<UserEntity>(
-            this.mapper.map(userDomain, UserDomain, UserEntity),
-          );
-        }
+        await this.endCampaign(campaign.id, queryRunner);
       }
       await queryRunner.commitTransaction();
     } catch (error) {
@@ -322,6 +293,54 @@ export class CampaignService {
     }
 
     this.logger.log(`END: endExpiredCampaigns`);
+  }
+
+  async endCampaign(
+    campaignId: string,
+    queryRunner?: QueryRunner,
+  ): Promise<void> {
+    let qr: QueryRunner | undefined;
+
+    if (!queryRunner) {
+      qr = this.dataSource.createQueryRunner();
+      await qr.connect();
+      await qr.startTransaction();
+    } else {
+      qr = queryRunner;
+    }
+
+    try {
+      const memberships =
+        await this.dataSource.manager.find<CampaignMembershipEntity>(
+          CampaignMembershipEntity,
+          {
+            where: { campaignId },
+          },
+        );
+      this.logger.debug(`Found ${memberships.length} memberships`);
+
+      for (const membership of memberships) {
+        const userEntity = await qr.manager.findOne<UserEntity>(UserEntity, {
+          where: { id: membership.userId },
+        });
+        if (!userEntity) {
+          this.logger.error(`User not found: ${membership.userId}`);
+          throw new UserError.UserNotFound();
+        }
+        const userDomain = this.mapper.map(userEntity, UserEntity, UserDomain);
+        userDomain.update({ activeCampaignId: null });
+        await this.dataSource.manager.save<UserEntity>(
+          this.mapper.map(userDomain, UserDomain, UserEntity),
+        );
+      }
+      if (!queryRunner) await qr.commitTransaction();
+    } catch (error) {
+      this.logger.error(error);
+      if (!queryRunner) await qr.rollbackTransaction();
+      throw error;
+    } finally {
+      if (!queryRunner) await qr.release();
+    }
   }
 
   async generateUniqueCampaignShortcode() {

@@ -7,6 +7,7 @@ import { Cron } from '@nestjs/schedule';
 
 import { CreateCampaignDTO } from './use-cases/create-campaign/create-campaign.dto';
 import { CreateCampaignUseCase } from './use-cases/create-campaign/create-campaign.use-case';
+import { EndCampaignUseCase } from './use-cases/end-campaign/end-campaign.use-case';
 import { EndExpiredCampaignsUseCase } from './use-cases/end-expired-campaigns/end-expired-campaigns.use-case';
 import { GetCampaignByIdDTO } from './use-cases/get-campaign-by-id/get-campaign-by-id.dto';
 import { GetCampaignByIdUseCase } from './use-cases/get-campaign-by-id/get-campaign-by-id.use-case';
@@ -24,6 +25,7 @@ export class CampaignController {
     private getCampaignByIdUseCase: GetCampaignByIdUseCase,
     private getCampaignByShortcodeUseCase: GetCampaignByShortcodeUseCase,
     private createCampaignUseCase: CreateCampaignUseCase,
+    private endCampaignUseCase: EndCampaignUseCase,
     private joinCampaignUseCase: JoinCampaignUseCase,
     private leaveCampaignUseCase: LeaveCampaignUseCase,
     private endExpiredCampaignsUseCase: EndExpiredCampaignsUseCase,
@@ -64,6 +66,14 @@ export class CampaignController {
       ...dto,
       userId: user.id,
     });
+  }
+
+  @Post('/id/:campaignId/end')
+  async endCampaignById(
+    @User() user: IUserIdentity,
+    @Param() dto: GetCampaignByIdDTO,
+  ) {
+    return await this.endCampaignUseCase.execute({ ...dto, userId: user.id });
   }
 
   @Cron('0 10 17 * * *')

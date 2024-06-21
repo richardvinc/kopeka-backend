@@ -3,7 +3,7 @@ import { GPSLocation } from '@libs/reports/domains/report.domain';
 import { BaseDomain } from '@libs/shared/domains/base-domain';
 
 interface CampaignJourneyProps {
-  campaignShortcode: string;
+  campaignId: string;
   userId: string;
   location: GPSLocation;
 }
@@ -15,7 +15,7 @@ export class CampaignJourneyDomain extends BaseDomain {
   id: string;
 
   @AutoMap()
-  campaignShortcode: string;
+  campaignId: string;
 
   @AutoMap()
   userId: string;
