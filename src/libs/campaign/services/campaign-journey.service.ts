@@ -62,7 +62,7 @@ export class CampaignJourneyService {
         ],
       },
       arrows: true,
-      attribution: 'Koalisi Pejalan Kaki',
+      attribution: `#${campaign.campaignShortcode} - Koalisi Pejalan Kaki`,
       height: 300,
       width: 400,
     });
