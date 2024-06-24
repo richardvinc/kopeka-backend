@@ -1,6 +1,6 @@
 import { IsUUID } from 'class-validator';
 
-export class LikeReportDTO {
+export class UnlikeReportDTO {
   @IsUUID()
   readonly reportId: string;
 

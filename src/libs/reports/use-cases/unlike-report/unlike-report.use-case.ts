@@ -4,25 +4,25 @@ import { ReportService } from '@libs/reports/services/report.service';
 import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
 import { Inject } from '@nestjs/common';
 
-import { LikeReportDTO } from './like-report.dto';
+import { UnlikeReportDTO } from './unlike-report.dto';
 
-export class LikeReportUseCase extends BaseUseCase<LikeReportDTO, void> {
+export class UnlikeReportUseCase extends BaseUseCase<UnlikeReportDTO, void> {
   constructor(
     @Inject(REPORT_SERVICE)
     private reportService: ReportService,
   ) {
-    super(LikeReportUseCase.name);
+    super(UnlikeReportUseCase.name);
   }
 
-  async execute(dto: LikeReportDTO): Promise<void> {
+  async execute(dto: UnlikeReportDTO): Promise<void> {
     this.logStartExecution(dto);
 
     const { reportId, userId } = dto;
     const report = await this.reportService.getReportById(reportId, userId);
     if (!report) throw new ReportError.ReportNotFound();
 
-    if (report.isReacted === undefined || report.isReacted === false)
-      await this.reportService.likeReport(reportId, userId);
+    if (report.isReacted === true)
+      await this.reportService.unlikeReport(reportId, userId);
 
     this.logEndExecution();
   }

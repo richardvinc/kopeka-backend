@@ -25,6 +25,7 @@ import { GetNearbyReportUseCase } from './use-cases/get-nearby-report/get-nearby
 import { GetReportByIdUseCase } from './use-cases/get-report-by-id/get-report-by-id.use-case';
 import { GetReportsByCampaignIdUseCase } from './use-cases/get-reports-by-campaign-id/get-reports-by-campaign-id.use-case';
 import { LikeReportUseCase } from './use-cases/like-report/like-report.use-case';
+import { UnlikeReportUseCase } from './use-cases/unlike-report/unlike-report.use-case';
 
 const useCases = [
   CreateReportUseCase,
@@ -32,6 +33,7 @@ const useCases = [
   GetReportByIdUseCase,
   GetReportsByCampaignIdUseCase,
   LikeReportUseCase,
+  UnlikeReportUseCase,
   GetLatestReportsUseCase,
   GetImageUploadUrlUseCase,
   DeleteReportUseCase,

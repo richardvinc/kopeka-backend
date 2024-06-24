@@ -28,6 +28,7 @@ import { GetReportsByCampaignIdDTO } from './use-cases/get-reports-by-campaign-i
 import { GetReportsByCampaignIdUseCase } from './use-cases/get-reports-by-campaign-id/get-reports-by-campaign-id.use-case';
 import { LikeReportDTO } from './use-cases/like-report/like-report.dto';
 import { LikeReportUseCase } from './use-cases/like-report/like-report.use-case';
+import { UnlikeReportUseCase } from './use-cases/unlike-report/unlike-report.use-case';
 
 @UseGuards(FirebaseAuthGuard)
 @Controller('reports')
@@ -38,6 +39,7 @@ export class ReportController {
     private getReportByCampaignIdUseCase: GetReportsByCampaignIdUseCase,
     private getNearbyReportsUseCase: GetNearbyReportUseCase,
     private likeReportUseCase: LikeReportUseCase,
+    private unlikeReportUseCase: UnlikeReportUseCase,
     private getLatestReportsUseCase: GetLatestReportsUseCase,
     private getImageUploadURLUseCase: GetImageUploadUrlUseCase,
     private deleteReportUseCase: DeleteReportUseCase,
@@ -119,16 +121,14 @@ export class ReportController {
     return await this.likeReportUseCase.execute({
       ...dto,
       userId: user.id,
-      isLiked: true,
     });
   }
 
   @Post('/:reportId/unlike')
   async unlikeReport(@User() user: IUserIdentity, @Param() dto: LikeReportDTO) {
-    return await this.likeReportUseCase.execute({
+    return await this.unlikeReportUseCase.execute({
       ...dto,
       userId: user.id,
-      isLiked: false,
     });
   }
 }
