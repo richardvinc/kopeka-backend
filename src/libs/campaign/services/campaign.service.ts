@@ -259,11 +259,12 @@ export class CampaignService {
     isExpiredOnly?: true,
   ): Promise<CampaignDomain[]> {
     this.logger.log(`START: getCampaignsByUserId`);
-    const entity = await this.campaignRepository.createQueryBuilder('campaign');
-    entity.innerJoinAndSelect('campaign.memberships', 'memberships');
-    entity.where('memberships.userId = :userId', { userId });
-    if (isExpiredOnly) entity.andWhere('campaign.endedAt IS NOT NULL');
-    const entities = await entity.getMany();
+    const qb = await this.campaignRepository.createQueryBuilder('campaign');
+    qb.innerJoinAndSelect('campaign.memberships', 'memberships');
+    qb.where('memberships.userId = :userId', { userId });
+    qb.addOrderBy('campaign.createdAt', 'DESC');
+    if (isExpiredOnly) qb.andWhere('campaign.endedAt IS NOT NULL');
+    const entities = await qb.getMany();
 
     this.logger.log(`END: getCampaignsByUserId`);
     return this.mapper.mapArray(entities, CampaignEntity, CampaignDomain);
