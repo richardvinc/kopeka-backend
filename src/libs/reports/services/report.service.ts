@@ -256,9 +256,10 @@ export class ReportService {
             userId,
           },
         });
+      console.log(exists);
 
       if (!exists) {
-        await queryRunner.manager.getRepository(ReportLikeEntity).recover({
+        await queryRunner.manager.getRepository(ReportLikeEntity).save({
           reportId,
           userId,
         });
@@ -297,7 +298,7 @@ export class ReportService {
           },
         });
       if (exists) {
-        await queryRunner.manager.getRepository(ReportLikeEntity).softDelete({
+        await queryRunner.manager.getRepository(ReportLikeEntity).delete({
           reportId,
           userId,
         });

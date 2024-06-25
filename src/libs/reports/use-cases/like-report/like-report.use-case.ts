@@ -21,6 +21,7 @@ export class LikeReportUseCase extends BaseUseCase<LikeReportDTO, void> {
     const report = await this.reportService.getReportById(reportId, userId);
     if (!report) throw new ReportError.ReportNotFound();
 
+    console.log(report);
     if (report.isReacted === undefined || report.isReacted === false)
       await this.reportService.likeReport(reportId, userId);
 
