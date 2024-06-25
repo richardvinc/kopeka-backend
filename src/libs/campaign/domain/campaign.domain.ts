@@ -5,6 +5,7 @@ import { UserDomain } from '@libs/users/domains/user.domain';
 interface CampaignProps {
   campaignShortcode: string;
   campaignImage?: string;
+  description?: string;
   createdById: string;
   totalCampaigners?: number;
   totalReports?: number;
@@ -26,6 +27,9 @@ export class CampaignDomain extends BaseDomain {
 
   @AutoMap()
   campaignImage?: string;
+
+  @AutoMap()
+  description?: string;
 
   @AutoMap()
   totalCampaigners: number;

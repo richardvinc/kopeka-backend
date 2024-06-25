@@ -16,4 +16,8 @@ export class AppConfigService {
   get paginationTokenSecret(): string {
     return this.configService.getOrThrow('PAGINATION_TOKEN_SECRET');
   }
+
+  get imageGeneratorFunctionURL(): string {
+    return this.configService.getOrThrow('IMAGE_GENERATOR_FUNCTION_URL');
+  }
 }

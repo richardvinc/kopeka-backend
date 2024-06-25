@@ -1,8 +1,9 @@
-import osmsm from 'osm-static-maps';
 import { Repository } from 'typeorm';
 
+import { AppConfigService } from '@libs/config/app/app-config.service';
 import { AZURE_STORAGE_SERVICE } from '@libs/providers/azure-storage';
 import { AzureStorageService } from '@libs/providers/azure-storage/azure-storage.service';
+import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -14,7 +15,7 @@ import { CampaignJourneyCosmosdbRepository } from '../repositories/campaign-jour
 @Injectable()
 export class CampaignJourneyService {
   private containerName: string = 'campaign-journeys';
-  private storageAccountName: string;
+  private imageGeneratorFunctionUrl: string;
 
   constructor(
     @Inject(CAMPAIGN_JOURNEY_REPOSITORY)
@@ -23,57 +24,29 @@ export class CampaignJourneyService {
     private readonly campaignRepository: Repository<CampaignEntity>,
     @Inject(AZURE_STORAGE_SERVICE)
     private readonly azureStorageService: AzureStorageService,
+    private appConfigService: AppConfigService,
+    private httpService: HttpService,
   ) {
-    this.storageAccountName = this.azureStorageService.getStorageAccountName();
+    this.imageGeneratorFunctionUrl =
+      this.appConfigService.imageGeneratorFunctionURL;
   }
 
   async postUserLocation(campaignJourney: CampaignJourneyDomain) {
     await this.campaignJourneyRepository.create(campaignJourney);
   }
 
-  async generateMapJourney(campaignId: string) {
+  async generateMapImage(campaignId: string) {
+    const filename = `${campaignId}.png`;
+
     const campaign = await this.campaignRepository.findOne({
       where: { id: campaignId },
     });
     if (!campaign) throw new Error('Campaign not found');
 
-    const journeys =
-      await this.campaignJourneyRepository.findAllByCampaignId(campaignId);
-    const locations: [number, number][] = journeys.map((journey) => [
-      journey.location.longitude,
-      journey.location.latitude,
-    ]);
-
-    if (locations.length === 0) return;
-
-    const map = await osmsm({
-      geojson: {
-        type: 'FeatureCollection',
-        features: [
-          {
-            type: 'Feature',
-            properties: {},
-            geometry: {
-              coordinates: locations,
-              type: 'LineString',
-            },
-            id: 0,
-          },
-        ],
-      },
-      arrows: true,
-      attribution: `#${campaign.campaignShortcode} - Koalisi Pejalan Kaki`,
-      height: 300,
-      width: 400,
-    });
-    // save buffer as image
-    // fs.writeFileSync(`./${campaignId}.png`, map);
-    const filename = `${campaignId}.png`;
-    await this.azureStorageService.uploadCampaignJourneyImageToAzure(
-      this.containerName,
-      filename,
-      map,
-    );
+    // create POST request to image generator function URL
+    this.httpService
+      .post(`${this.imageGeneratorFunctionUrl}/${campaignId}`, {})
+      .subscribe();
 
     // update campaign image URL
     const imageUrl = this.azureStorageService.getFileAccessURL(

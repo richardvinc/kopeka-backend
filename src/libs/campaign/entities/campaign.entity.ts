@@ -26,6 +26,10 @@ export class CampaignEntity {
   campaignShortcode: string;
 
   @AutoMap()
+  @Column({ name: 'description', nullable: true, default: null })
+  description?: string;
+
+  @AutoMap()
   @Column({ name: 'campaign_image', nullable: true, default: null })
   campaignImage?: string;
 

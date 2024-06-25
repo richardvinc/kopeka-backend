@@ -39,7 +39,7 @@ export class EndCampaignUseCase extends BaseUseCase<
     }
 
     await this.campaignService.endCampaign(campaign.id);
-    // await this.campaignJourneyService.generateMapJourney(campaign.id);
+    await this.campaignJourneyService.generateMapImage(campaign.id);
 
     this.logEndExecution();
   }

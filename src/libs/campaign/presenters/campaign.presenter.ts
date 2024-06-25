@@ -15,6 +15,10 @@ export class CampaignPresenterDTO {
   @Expose({ name: 'image_url' })
   campaignImage: string;
 
+  @AutoMap()
+  @Expose({ name: 'description' })
+  description: string;
+
   @AutoMap(() => UserPresenterMinimalDTO)
   @Expose({ name: 'created_by' })
   createdBy: UserPresenterMinimalDTO;

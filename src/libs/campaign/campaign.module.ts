@@ -1,5 +1,7 @@
+import { AppConfigModule } from '@libs/config/app';
 import { AzureStorageModule } from '@libs/providers/azure-storage/azure-storage.module';
 import { UserModule } from '@libs/users/user.module';
+import { HttpModule } from '@nestjs/axios';
 import { AzureCosmosDbModule } from '@nestjs/azure-database';
 import { Module, Provider } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -68,8 +70,10 @@ const UseCases = [
         dto: CampaignJourneyCosmosdbEntity,
       },
     ]),
+    AppConfigModule,
     UserModule,
     AzureStorageModule,
+    HttpModule,
   ],
   controllers: [CampaignController, CampaignJourneyController],
   providers: [...Repositories, ...Services, ...UseCases, CampaignMapperProfile],
