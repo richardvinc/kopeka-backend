@@ -4,7 +4,7 @@ import { AppConfigService } from '@libs/config/app/app-config.service';
 import { AZURE_STORAGE_SERVICE } from '@libs/providers/azure-storage';
 import { AzureStorageService } from '@libs/providers/azure-storage/azure-storage.service';
 import { HttpService } from '@nestjs/axios';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { CAMPAIGN_JOURNEY_REPOSITORY } from '../campaign.constant';
@@ -14,6 +14,7 @@ import { CampaignJourneyCosmosdbRepository } from '../repositories/campaign-jour
 
 @Injectable()
 export class CampaignJourneyService {
+  private readonly logger = new Logger(CampaignJourneyService.name);
   private containerName: string = 'campaign-journeys';
   private imageGeneratorFunctionUrl: string;
 
@@ -32,10 +33,17 @@ export class CampaignJourneyService {
   }
 
   async postUserLocation(campaignJourney: CampaignJourneyDomain) {
+    this.logger.log(`START: postUserLocation`);
+    this.logger.log(
+      `Post user location to campaign journey ${JSON.stringify(campaignJourney)}`,
+    );
     await this.campaignJourneyRepository.create(campaignJourney);
+    this.logger.log(`END: postUserLocation`);
   }
 
   async generateMapImage(campaignId: string) {
+    this.logger.log(`START: generateMapImage`);
+
     const filename = `${campaignId}.png`;
 
     const campaign = await this.campaignRepository.findOne({
@@ -46,7 +54,15 @@ export class CampaignJourneyService {
     // create POST request to image generator function URL
     this.httpService
       .post(`${this.imageGeneratorFunctionUrl}/${campaignId}`, {})
-      .subscribe();
+      .subscribe({
+        next: () => {
+          this.logger.log('Map image generated successfully');
+        },
+        error: (err) => {
+          this.logger.error(err);
+          throw new Error('Failed to generate map image');
+        },
+      });
 
     // update campaign image URL
     const imageUrl = this.azureStorageService.getFileAccessURL(
@@ -56,5 +72,6 @@ export class CampaignJourneyService {
 
     campaign.campaignImage = imageUrl;
     await this.campaignRepository.save(campaign);
+    this.logger.log(`END: generateMapImage`);
   }
 }
