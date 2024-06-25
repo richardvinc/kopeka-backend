@@ -281,7 +281,7 @@ export class CampaignService {
     return this.mapper.map(entity, CampaignEntity, CampaignDomain);
   }
 
-  async endExpiredCampaigns(expiredDate: Date) {
+  async endExpiredCampaigns(expiredDate: Date): Promise<string[]> {
     this.logger.log(`START: endExpiredCampaigns`);
     this.logger.log(`End campaign with expired date < ${expiredDate}`);
     const queryRunner = this.dataSource.createQueryRunner();
@@ -299,6 +299,8 @@ export class CampaignService {
         await this.endCampaign(campaign.id, queryRunner);
       }
       await queryRunner.commitTransaction();
+
+      return campaigns.map((campaign) => campaign.id);
     } catch (error) {
       this.logger.error(error);
       await queryRunner.rollbackTransaction();
