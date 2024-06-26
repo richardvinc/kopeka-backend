@@ -1,11 +1,9 @@
 import {
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 import { UserEntity } from '@libs/users/entities/user.entity';
@@ -22,17 +20,6 @@ export class ReportLikeEntity {
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
-
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
-  updatedAt?: Date;
-
-  @DeleteDateColumn({
-    name: 'deleted_at',
-    type: 'timestamptz',
-    nullable: true,
-    default: null,
-  })
-  deletedAt?: Date;
 
   @ManyToOne(() => ReportEntity, (report) => report.likes)
   @JoinColumn({ name: 'report_id' })

@@ -55,6 +55,33 @@ export class ReportEntity {
   @AutoMap()
   category: string;
 
+  @Column({
+    name: 'category_remark',
+    type: 'text',
+    nullable: true,
+    default: null,
+  })
+  @AutoMap()
+  categoryRemark?: string;
+
+  @Column({
+    name: 'sub_categories',
+    type: 'text',
+    array: true,
+    nullable: true,
+  })
+  @AutoMap()
+  subCategories?: string[];
+
+  @Column({
+    name: 'sub_category_remark',
+    type: 'text',
+    nullable: true,
+    default: null,
+  })
+  @AutoMap()
+  subCategoryRemark?: string;
+
   @Column()
   @AutoMap()
   condition: string;

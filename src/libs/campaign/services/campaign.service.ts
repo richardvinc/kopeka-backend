@@ -1,4 +1,10 @@
-import { DataSource, LessThanOrEqual, QueryRunner, Repository } from 'typeorm';
+import {
+  DataSource,
+  IsNull,
+  LessThanOrEqual,
+  QueryRunner,
+  Repository,
+} from 'typeorm';
 
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
@@ -291,7 +297,7 @@ export class CampaignService {
 
     try {
       const campaigns = await this.campaignRepository.find({
-        where: { expiredAt: LessThanOrEqual(expiredDate) },
+        where: { expiredAt: LessThanOrEqual(expiredDate), endedAt: IsNull() },
       });
       this.logger.debug(`Found ${campaigns.length} campaigns to end`);
       this.logger.debug(campaigns);

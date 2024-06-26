@@ -41,6 +41,14 @@ export class ReportMapperProfile extends AutomapperProfile {
           mapFrom((source) => source.location.geoHash),
         ),
         forMember(
+          (destination) => destination.categoryRemark,
+          mapFrom((source) => source.categoryRemark ?? null),
+        ),
+        forMember(
+          (destination) => destination.subCategories,
+          mapFrom((source) => source.subCategories ?? []),
+        ),
+        forMember(
           (destination) => destination.user,
           mapFrom((source) =>
             this.mapper.map(source.user, UserDomain, UserEntity),
@@ -82,6 +90,14 @@ export class ReportMapperProfile extends AutomapperProfile {
             source.updatedAt ? DateUtils.toEpoch(source.updatedAt) : undefined,
           ),
         ),
+        forMember(
+          (destination) => destination.categoryRemark,
+          mapFrom((source) => source.categoryRemark ?? null),
+        ),
+        forMember(
+          (destination) => destination.subCategories,
+          mapFrom((source) => source.subCategories ?? []),
+        ),
       );
 
       createMap(
@@ -103,6 +119,14 @@ export class ReportMapperProfile extends AutomapperProfile {
           mapFrom((source) =>
             this.mapper.map(source.user, UserEntity, UserDomain),
           ),
+        ),
+        forMember(
+          (destination) => destination.categoryRemark,
+          mapFrom((source) => source.categoryRemark ?? null),
+        ),
+        forMember(
+          (destination) => destination.subCategories,
+          mapFrom((source) => source.subCategories ?? []),
         ),
       );
       createMap(
@@ -128,6 +152,14 @@ export class ReportMapperProfile extends AutomapperProfile {
         forMember(
           (destination) => destination.isReacted,
           condition((source) => source.isReacted, false),
+        ),
+        forMember(
+          (destination) => destination.categoryRemark,
+          mapFrom((source) => source.categoryRemark ?? null),
+        ),
+        forMember(
+          (destination) => destination.subCategories,
+          mapFrom((source) => source.subCategories ?? []),
         ),
       );
     };

@@ -29,7 +29,11 @@ export class EndExpiredCampaignsUseCase extends BaseUseCase<
     );
     if (expiredCampaignIds.length > 0) {
       expiredCampaignIds.forEach(async (campaignId) => {
-        await this.campaignJourneyService.generateMapImage(campaignId);
+        try {
+          await this.campaignJourneyService.generateMapImage(campaignId);
+        } catch (error) {
+          this.logger.error(error);
+        }
       });
     }
     this.logEndExecution();

@@ -1,9 +1,11 @@
 import { Expose } from 'class-transformer';
 import {
+  IsArray,
   IsEnum,
   IsLatitude,
   IsLongitude,
   IsOptional,
+  IsString,
   IsUrl,
   IsUUID,
 } from 'class-validator';
@@ -30,6 +32,18 @@ export class CreateReportDTO {
     ).join(', ')}`,
   })
   category: REPORT_CATEGORY;
+
+  @IsString()
+  @IsOptional()
+  categoryRemark?: string;
+
+  @IsOptional()
+  @IsArray()
+  subCategories?: string[];
+
+  @IsString()
+  @IsOptional()
+  subCategoryRemark?: string;
 
   @IsEnum(Object.values(REPORT_CONDITION), {
     message: `condition must be one of these values: ${Object.values(

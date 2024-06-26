@@ -46,6 +46,18 @@ export class ReportPresenterDTO {
   category: string;
 
   @AutoMap()
+  @Expose({ name: 'category_remark' })
+  categoryRemark?: string;
+
+  @AutoMap()
+  @Expose({ name: 'sub_categories' })
+  subCategories?: string[];
+
+  @AutoMap()
+  @Expose({ name: 'sub_category_remark' })
+  subCategoryRemark?: string;
+
+  @AutoMap()
   condition: string;
 
   @AutoMap()

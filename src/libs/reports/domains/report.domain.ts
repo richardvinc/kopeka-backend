@@ -29,12 +29,15 @@ interface ReportProps {
   reportedById: string;
   totalReaction: number;
   category: REPORT_CATEGORY;
+  categoryRemark?: string;
+  subCategories?: string[];
+  subCategoryRemark?: string;
   condition: REPORT_CONDITION;
   campaignId?: string;
   user?: UserDomain;
 }
 
-type UpdateableProps = Partial<Pick<ReportProps, 'location'>>;
+type UpdateableProps = Partial<Pick<ReportProps, 'location' | 'totalReaction'>>;
 
 export class ReportDomain extends BaseDomain {
   @AutoMap(() => GPSLocationWithGeoHash)
@@ -51,6 +54,16 @@ export class ReportDomain extends BaseDomain {
 
   @AutoMap()
   category: REPORT_CATEGORY;
+
+  @AutoMap()
+  categoryRemark?: string;
+
+  @AutoMap()
+  subCategories?: string[];
+
+  // if the sub category is other, then remark is required
+  @AutoMap()
+  subCategoryRemark?: string;
 
   @AutoMap()
   condition: REPORT_CONDITION;
