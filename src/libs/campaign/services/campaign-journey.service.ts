@@ -52,17 +52,17 @@ export class CampaignJourneyService {
     if (!campaign) throw new Error('Campaign not found');
 
     // create POST request to image generator function URL
-    this.httpService
-      .post(`${this.imageGeneratorFunctionUrl}/${campaignId}`, {})
-      .subscribe({
-        next: () => {
-          this.logger.log('Map image generated successfully');
-        },
-        error: (err) => {
-          this.logger.error(err);
-          throw new Error('Failed to generate map image');
-        },
-      });
+    // this.httpService
+    //   .post(`${this.imageGeneratorFunctionUrl}/${campaignId}`, {})
+    //   .subscribe({
+    //     next: () => {
+    //       this.logger.log('Map image generated successfully');
+    //     },
+    //     error: (err) => {
+    //       this.logger.error(err);
+    //       throw new Error('Failed to generate map image');
+    //     },
+    //   });
 
     // update campaign image URL
     const imageUrl = this.azureStorageService.getFileAccessURL(
