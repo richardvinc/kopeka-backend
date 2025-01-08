@@ -3,7 +3,6 @@ import { FirebaseAuthGuard } from '@libs/auth/guards/firebase-auth.guard';
 import { IUserIdentity } from '@libs/auth/interfaces/user.interface';
 import { DateUtils } from '@libs/shared/utils/date.utils';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
 
 import { CreateCampaignDTO } from './use-cases/create-campaign/create-campaign.dto';
 import { CreateCampaignUseCase } from './use-cases/create-campaign/create-campaign.use-case';
@@ -83,7 +82,7 @@ export class CampaignController {
     return await this.endCampaignUseCase.execute({ ...dto, userId: user.id });
   }
 
-  @Cron('0 10 17 * * *')
+  // @Cron('0 10 17 * * *')
   async endExpiredCampaign() {
     return await this.endExpiredCampaignsUseCase.execute({
       expiredDate: DateUtils.getCurrentLocalDate(),
