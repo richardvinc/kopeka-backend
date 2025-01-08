@@ -39,6 +39,22 @@ export class ReportService {
     private dataSource: DataSource,
   ) {}
 
+  async getReports(param: {
+    lat: number;
+    lng: number;
+  }): Promise<ReportDomain[]> {
+    this.logger.log(`START: getReports`);
+    this.logger.log(`Getting reports: ${param.lat}, ${param.lng}`);
+    const qb = await this.reportRepository.createQueryBuilder('report');
+    qb.limit(75);
+
+    const reports = await qb.getMany();
+    this.logger.log(`query: ${qb.getQuery()}`);
+
+    this.logger.log(`END: getReportById`);
+    return this.mapper.mapArray(reports, ReportEntity, ReportDomain);
+  }
+
   async getReportById(
     reportId: string,
     userId?: string,

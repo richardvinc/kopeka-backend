@@ -8,6 +8,7 @@ import { ReportLikeEntity } from './entities/report-like.entity';
 import { ReportEntity } from './entities/report.entity';
 import { GPSLocationMapperProfile } from './mappers/gps-location.mapper';
 import { ReportMapperProfile } from './mappers/report.mapper';
+import { PublicReportController } from './public-report.controller';
 import {
   PAGINATION_TOKEN_SERVICE,
   REPORT_IMAGE_STORAGE_SERVICE,
@@ -25,6 +26,8 @@ import { GetNearbyReportUseCase } from './use-cases/get-nearby-report/get-nearby
 import { GetReportByIdUseCase } from './use-cases/get-report-by-id/get-report-by-id.use-case';
 import { GetReportsByCampaignIdUseCase } from './use-cases/get-reports-by-campaign-id/get-reports-by-campaign-id.use-case';
 import { LikeReportUseCase } from './use-cases/like-report/like-report.use-case';
+import { GetPublicReportByIdReportUseCase } from './use-cases/public/get-public-report-by-id/get-public-report-by-id.use-case';
+import { GetPublicReportUseCase } from './use-cases/public/get-public-report/get-public-report.use-case';
 import { UnlikeReportUseCase } from './use-cases/unlike-report/unlike-report.use-case';
 
 const useCases = [
@@ -37,6 +40,8 @@ const useCases = [
   GetLatestReportsUseCase,
   GetImageUploadUrlUseCase,
   DeleteReportUseCase,
+  GetPublicReportUseCase,
+  GetPublicReportByIdReportUseCase,
 ];
 const mappers = [GPSLocationMapperProfile, ReportMapperProfile];
 const services: Provider[] = [
@@ -62,6 +67,6 @@ const services: Provider[] = [
   ],
   providers: [...services, ...useCases, ...mappers, AzureStorageService],
   exports: [...services],
-  controllers: [ReportController],
+  controllers: [ReportController, PublicReportController],
 })
 export class ReportModule {}

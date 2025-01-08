@@ -19,8 +19,12 @@ export abstract class BaseUseCase<TRequest, TResponse> {
   ):
     | Promise<TResponse>
     | TResponse
+    | Promise<TResponse[]>
+    | TResponse[]
     | Promise<BaseResult<TResponse>>
     | BaseResult<TResponse>
+    | Promise<BaseResult<TResponse[]>>
+    | BaseResult<TResponse[]>
     | Promise<BasePaginatedResult<TResponse>>
     | BasePaginatedResult<TResponse>
     | Promise<void>
