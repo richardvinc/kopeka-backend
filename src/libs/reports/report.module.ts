@@ -28,6 +28,7 @@ import { GetReportByIdUseCase } from './use-cases/get-report-by-id/get-report-by
 import { GetReportsByCampaignIdUseCase } from './use-cases/get-reports-by-campaign-id/get-reports-by-campaign-id.use-case';
 import { LikeReportUseCase } from './use-cases/like-report/like-report.use-case';
 import { GetPublicReportByIdReportUseCase } from './use-cases/public/get-public-report-by-id/get-public-report-by-id.use-case';
+import { GetPublicReportCountUseCase } from './use-cases/public/get-public-report-count/get-public-report-count.use-case';
 import { GetPublicReportUseCase } from './use-cases/public/get-public-report/get-public-report.use-case';
 import { UnlikeReportUseCase } from './use-cases/unlike-report/unlike-report.use-case';
 
@@ -42,6 +43,7 @@ const useCases = [
   GetImageUploadUrlUseCase,
   DeleteReportUseCase,
   GetPublicReportUseCase,
+  GetPublicReportCountUseCase,
   GetPublicReportByIdReportUseCase,
 ];
 const mappers = [GPSLocationMapperProfile, ReportMapperProfile];

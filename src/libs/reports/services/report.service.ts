@@ -43,6 +43,20 @@ export class ReportService {
     private dataSource: DataSource,
   ) {}
 
+  async getReportCount(): Promise<ReportCountEntity> {
+    this.logger.log(`START: getReportCount`);
+    this.logger.log(`Getting report count`);
+    const reportCount = await this.dataSource
+      .getRepository(ReportCountEntity)
+      .findOne({
+        where: {},
+      });
+    if (!reportCount) throw new ReportError.ReportNotFound();
+
+    this.logger.log(`END: getReportCount`);
+    return reportCount;
+  }
+
   async getReports(param: {
     lat: number;
     lng: number;

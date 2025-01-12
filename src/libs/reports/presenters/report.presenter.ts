@@ -68,3 +68,21 @@ export class ReportPresenterDTO {
   @Expose({ name: 'updated_at' })
   updatedAt: number;
 }
+
+export class ReportCountPresenterDTO {
+  @AutoMap()
+  @Expose({ name: 'user_count' })
+  userCount: number;
+
+  @AutoMap()
+  @Expose({ name: 'report_count' })
+  reportCount: number;
+
+  @AutoMap()
+  @Expose({ name: 'good_report_count' })
+  goodReportCount: number;
+
+  @AutoMap()
+  @Expose({ name: 'bad_report_count' })
+  badReportCount: number;
+}

@@ -13,8 +13,12 @@ import { UserPresenterMinimalDTO } from '@libs/users/presenters/user.presenter';
 import { Injectable } from '@nestjs/common';
 
 import { GPSLocationWithGeoHash, ReportDomain } from '../domains/report.domain';
+import { ReportCountEntity } from '../entities/report-count.entity';
 import { ReportEntity } from '../entities/report.entity';
-import { ReportPresenterDTO } from '../presenters/report.presenter';
+import {
+  ReportCountPresenterDTO,
+  ReportPresenterDTO,
+} from '../presenters/report.presenter';
 
 @Injectable()
 export class ReportMapperProfile extends AutomapperProfile {
@@ -160,6 +164,28 @@ export class ReportMapperProfile extends AutomapperProfile {
         forMember(
           (destination) => destination.subCategories,
           mapFrom((source) => source.subCategories ?? []),
+        ),
+      );
+
+      createMap(
+        map,
+        ReportCountEntity,
+        ReportCountPresenterDTO,
+        forMember(
+          (destination) => destination.userCount,
+          mapFrom((source) => source.userCount),
+        ),
+        forMember(
+          (destination) => destination.reportCount,
+          mapFrom((source) => source.reportCount),
+        ),
+        forMember(
+          (destination) => destination.goodReportCount,
+          mapFrom((source) => source.goodReportCount),
+        ),
+        forMember(
+          (destination) => destination.badReportCount,
+          mapFrom((source) => source.badReportCount),
         ),
       );
     };
