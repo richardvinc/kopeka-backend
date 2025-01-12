@@ -28,11 +28,10 @@ export class GetPublicReportUseCase extends BaseUseCase<
   ): Promise<BaseResult<ReportPresenterDTO[]>> {
     this.logStartExecution(dto);
 
-    const { latitude, longitude, categories, conditions } = dto;
+    const { geohash, categories, conditions } = dto;
 
     const reports = await this.reportService.getReports({
-      lat: latitude ?? 0,
-      lng: longitude ?? 0,
+      geohash,
       categories,
       conditions,
     });
