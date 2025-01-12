@@ -46,6 +46,11 @@ export class ReportService {
     this.logger.log(`START: getReports`);
     this.logger.log(`Getting reports: ${param.lat}, ${param.lng}`);
     const qb = await this.reportRepository.createQueryBuilder('report');
+    qb.leftJoinAndSelect(
+      'report.user',
+      'user',
+      'user.id = report.reported_by_id',
+    );
     qb.limit(75);
 
     const reports = await qb.getMany();
