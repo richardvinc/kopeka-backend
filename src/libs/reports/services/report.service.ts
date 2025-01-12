@@ -60,14 +60,47 @@ export class ReportService {
   async getReports(param: {
     lat: number;
     lng: number;
+    categories?: string;
+    conditions?: string;
   }): Promise<ReportDomain[]> {
     this.logger.log(`START: getReports`);
-    this.logger.log(`Getting reports: ${param.lat}, ${param.lng}`);
+    this.logger.log(
+      `Getting reports: ${param.lat}, ${param.lng}, ${param.categories}, ${param.conditions}`,
+    );
     const qb = await this.reportRepository.createQueryBuilder('report');
     qb.leftJoinAndSelect(
       'report.user',
       'user',
       'user.id = report.reported_by_id',
+    );
+
+    // apply filter
+    const { categories, conditions, lat, lng } = param;
+    const splittedCategories = categories?.split(',');
+    const splittedConditions = conditions?.split(',');
+    if (splittedCategories?.length && splittedCategories[0] !== '') {
+      qb.andWhere('report.category IN(:...categories)', {
+        categories: splittedCategories,
+      });
+    }
+    if (splittedConditions?.length && splittedConditions[0] !== '') {
+      qb.andWhere('report.condition IN(:...conditions)', {
+        conditions: splittedConditions,
+      });
+    }
+
+    // get nearby reports
+    const geoHash = GeoHash.encode(lat, lng).substring(
+      0,
+      GEOHASH_SEARCH_PRECISSION,
+    );
+    const neighbors = GeoHash.neighbors(geoHash);
+    // select reports starts with the same geohash
+    qb.andWhere(
+      `substring(report.geoHash, 0, ${GEOHASH_SEARCH_PRECISSION}) IN(:...geoHashes)`,
+      {
+        geoHashes: [geoHash, ...neighbors],
+      },
     );
 
     qb.orderBy('report.createdAt', 'DESC');

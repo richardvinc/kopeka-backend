@@ -1,4 +1,4 @@
-import { IsLatitude, IsLongitude, IsOptional } from 'class-validator';
+import { IsLatitude, IsLongitude, IsOptional, IsString } from 'class-validator';
 
 export class GetPublicReportDTO {
   @IsLatitude()
@@ -8,4 +8,12 @@ export class GetPublicReportDTO {
   @IsLongitude()
   @IsOptional()
   longitude?: number;
+
+  @IsOptional()
+  @IsString()
+  categories?: string;
+
+  @IsOptional()
+  @IsString()
+  conditions?: string;
 }
