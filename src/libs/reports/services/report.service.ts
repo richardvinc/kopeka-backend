@@ -51,7 +51,8 @@ export class ReportService {
       'user',
       'user.id = report.reported_by_id',
     );
-    qb.limit(75);
+    qb.orderBy('report.createdAt', 'DESC');
+    qb.limit(100);
 
     const reports = await qb.getMany();
     this.logger.log(`query: ${qb.getQuery()}`);
