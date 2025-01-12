@@ -1,7 +1,8 @@
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
+import { ReportCountEntity } from '@libs/reports/entities/report-count.entity';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -16,6 +17,7 @@ export class UserService {
     private mapper: Mapper,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private dataSource: DataSource,
   ) {}
 
   async getUserByFirebaseUid(firebaseUid: string): Promise<UserDomain | null> {
@@ -86,6 +88,28 @@ export class UserService {
     const userEntity = this.mapper.map(user, UserDomain, UserEntity);
 
     await this.userRepository.save(userEntity);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const reportCount = await queryRunner.manager.findOne<ReportCountEntity>(
+        ReportCountEntity,
+        {
+          where: {},
+        },
+      );
+      if (reportCount) {
+        reportCount.userCount += 1;
+        await queryRunner.manager.save(reportCount);
+      }
+    } catch (error) {
+      this.logger.log(`Error deleting report: ${error}`);
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
 
     this.logger.log(`END: createUser`);
     return userEntity

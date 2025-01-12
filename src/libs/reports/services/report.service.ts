@@ -9,10 +9,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { ReportDomain } from '../domains/report.domain';
+import { ReportCountEntity } from '../entities/report-count.entity';
 import { ReportLikeEntity } from '../entities/report-like.entity';
 import { ReportEntity } from '../entities/report.entity';
 import { ReportError } from '../errors/report.error';
-import { GEOHASH_SEARCH_PRECISSION } from '../report.constant';
+import {
+  GEOHASH_SEARCH_PRECISSION,
+  REPORT_CONDITION,
+} from '../report.constant';
 
 export interface GetNearbyReportsFilter {
   geoHash: string;
@@ -51,6 +55,7 @@ export class ReportService {
       'user',
       'user.id = report.reported_by_id',
     );
+
     qb.orderBy('report.createdAt', 'DESC');
     qb.limit(100);
 
@@ -128,6 +133,23 @@ export class ReportService {
         }
         campaignEntity.totalReports -= 1;
         await queryRunner.manager.save<CampaignEntity>(campaignEntity);
+      }
+
+      // update report count table
+      const reportCount = await queryRunner.manager.findOne<ReportCountEntity>(
+        ReportCountEntity,
+        {
+          where: {},
+        },
+      );
+      if (report && reportCount) {
+        reportCount.reportCount -= 1;
+        if (report.condition === REPORT_CONDITION.GOOD) {
+          reportCount.goodReportCount -= 1;
+        } else {
+          reportCount.badReportCount -= 1;
+        }
+        await queryRunner.manager.save<ReportCountEntity>(reportCount);
       }
 
       await queryRunner.commitTransaction();
@@ -368,6 +390,22 @@ export class ReportService {
         }
         campaignEntity.totalReports += 1;
         await queryRunner.manager.save<CampaignEntity>(campaignEntity);
+      }
+
+      const reportCount = await queryRunner.manager.findOne<ReportCountEntity>(
+        ReportCountEntity,
+        {
+          where: {},
+        },
+      );
+      if (reportCount) {
+        reportCount.reportCount += 1;
+        if (report.condition === REPORT_CONDITION.GOOD) {
+          reportCount.goodReportCount += 1;
+        } else {
+          reportCount.badReportCount += 1;
+        }
+        await queryRunner.manager.save<ReportCountEntity>(reportCount);
       }
 
       await queryRunner.commitTransaction();

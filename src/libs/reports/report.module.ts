@@ -4,6 +4,7 @@ import { AzureStorageService } from '@libs/providers/azure-storage/azure-storage
 import { Module, Provider } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { ReportCountEntity } from './entities/report-count.entity';
 import { ReportLikeEntity } from './entities/report-like.entity';
 import { ReportEntity } from './entities/report.entity';
 import { GPSLocationMapperProfile } from './mappers/gps-location.mapper';
@@ -61,7 +62,11 @@ const services: Provider[] = [
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ReportEntity, ReportLikeEntity]),
+    TypeOrmModule.forFeature([
+      ReportEntity,
+      ReportLikeEntity,
+      ReportCountEntity,
+    ]),
     AppConfigModule,
     AzureStorageModule,
   ],
