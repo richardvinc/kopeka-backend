@@ -26,6 +26,7 @@ import { GetLatestReportsUseCase } from './use-cases/get-latest-reports/get-late
 import { GetNearbyReportUseCase } from './use-cases/get-nearby-report/get-nearby-report.use-case';
 import { GetReportByIdUseCase } from './use-cases/get-report-by-id/get-report-by-id.use-case';
 import { GetReportsByCampaignIdUseCase } from './use-cases/get-reports-by-campaign-id/get-reports-by-campaign-id.use-case';
+import { GetReportsByUserIdUseCase } from './use-cases/get-reports-by-user-id/get-reports-by-user-id.use-case';
 import { LikeReportUseCase } from './use-cases/like-report/like-report.use-case';
 import { GetPublicReportByIdReportUseCase } from './use-cases/public/get-public-report-by-id/get-public-report-by-id.use-case';
 import { GetPublicReportCountUseCase } from './use-cases/public/get-public-report-count/get-public-report-count.use-case';
@@ -45,6 +46,7 @@ const useCases = [
   GetPublicReportUseCase,
   GetPublicReportCountUseCase,
   GetPublicReportByIdReportUseCase,
+  GetReportsByUserIdUseCase,
 ];
 const mappers = [GPSLocationMapperProfile, ReportMapperProfile];
 const services: Provider[] = [

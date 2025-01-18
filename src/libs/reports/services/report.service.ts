@@ -289,6 +289,49 @@ export class ReportService {
     return this.mapper.mapArray(reports, ReportEntity, ReportDomain);
   }
 
+  async getReportsByUserId(
+    userId: string,
+    nextToken?: string,
+  ): Promise<ReportDomain[]> {
+    this.logger.log(`START: getReportsByUserId`);
+    this.logger.log(`Getting reports for user: ${userId}`);
+    const qb = await this.reportRepository.createQueryBuilder('report');
+    qb.leftJoinAndSelect(
+      'report.user',
+      'user',
+      'user.id = report.reported_by_id',
+    );
+    qb.orderBy('report.rowId', 'DESC');
+
+    if (nextToken) {
+      qb.andWhere('report.rowId < :nextToken', {
+        nextToken: parseInt(nextToken),
+      });
+    }
+
+    if (userId) {
+      qb.leftJoin('report.likes', 'like', 'like.userId = :userId', { userId });
+      qb.addSelect(
+        'CASE WHEN COUNT(like.report_id) > 0 THEN true ELSE false END',
+        'isReacted',
+      );
+      qb.addGroupBy('report.id');
+      qb.addGroupBy('user.id');
+    }
+
+    qb.andWhere('report.reported_by_id = :userId', {
+      userId,
+    });
+
+    qb.limit(10);
+
+    const reports = await qb.getMany();
+    this.logger.log(`query: ${qb.getQuery()}`);
+
+    this.logger.log(`END: getReportsByUserId`);
+    return this.mapper.mapArray(reports, ReportEntity, ReportDomain);
+  }
+
   async getNearbyReports(
     filter: GetNearbyReportsFilter,
   ): Promise<ReportDomain[]> {

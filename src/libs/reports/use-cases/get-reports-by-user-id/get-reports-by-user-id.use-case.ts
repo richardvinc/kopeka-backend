@@ -1,0 +1,55 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
+import { ReportDomain } from '@libs/reports/domains/report.domain';
+import { ReportPresenterDTO } from '@libs/reports/presenters/report.presenter';
+import {
+  PAGINATION_TOKEN_SERVICE,
+  REPORT_SERVICE,
+} from '@libs/reports/report.constant';
+import { PaginationTokenService } from '@libs/reports/services/pagination-token.service';
+import { ReportService } from '@libs/reports/services/report.service';
+import { BaseResult } from '@libs/shared/presenters/result.presenter';
+import { BaseUseCase } from '@libs/shared/use-cases/base-use-case';
+import { Inject } from '@nestjs/common';
+
+import { GetReportsByUserIdDTO } from './get-reports-by-user-id.dto';
+
+export class GetReportsByUserIdUseCase extends BaseUseCase<
+  GetReportsByUserIdDTO,
+  ReportPresenterDTO[]
+> {
+  constructor(
+    @InjectMapper()
+    private readonly mapper: Mapper,
+    @Inject(REPORT_SERVICE)
+    private readonly reportService: ReportService,
+    @Inject(PAGINATION_TOKEN_SERVICE)
+    private readonly paginationTokenService: PaginationTokenService,
+  ) {
+    super(GetReportsByUserIdUseCase.name);
+  }
+
+  async execute(
+    dto: GetReportsByUserIdDTO,
+  ): Promise<BaseResult<ReportPresenterDTO[]>> {
+    this.logStartExecution(dto);
+
+    const { userId, nextToken } = dto;
+    const reports = await this.reportService.getReportsByUserId(
+      userId,
+      nextToken
+        ? this.paginationTokenService.decodeToken(nextToken)
+        : undefined,
+    );
+
+    const lastReport = reports[reports.length - 1];
+
+    this.logEndExecution();
+    return this.paginatedOk(
+      this.mapper.mapArray(reports, ReportDomain, ReportPresenterDTO),
+      lastReport
+        ? this.paginationTokenService.encodeToken(lastReport.rowId)
+        : null,
+    );
+  }
+}

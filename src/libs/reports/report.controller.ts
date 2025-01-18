@@ -26,6 +26,8 @@ import { GetReportByIdDTO } from './use-cases/get-report-by-id/get-report-by-id.
 import { GetReportByIdUseCase } from './use-cases/get-report-by-id/get-report-by-id.use-case';
 import { GetReportsByCampaignIdDTO } from './use-cases/get-reports-by-campaign-id/get-reports-by-campaign-id.dto';
 import { GetReportsByCampaignIdUseCase } from './use-cases/get-reports-by-campaign-id/get-reports-by-campaign-id.use-case';
+import { GetReportsByUserIdDTO } from './use-cases/get-reports-by-user-id/get-reports-by-user-id.dto';
+import { GetReportsByUserIdUseCase } from './use-cases/get-reports-by-user-id/get-reports-by-user-id.use-case';
 import { LikeReportDTO } from './use-cases/like-report/like-report.dto';
 import { LikeReportUseCase } from './use-cases/like-report/like-report.use-case';
 import { UnlikeReportUseCase } from './use-cases/unlike-report/unlike-report.use-case';
@@ -38,6 +40,7 @@ export class ReportController {
     private getReportByIdUseCase: GetReportByIdUseCase,
     private getReportByCampaignIdUseCase: GetReportsByCampaignIdUseCase,
     private getNearbyReportsUseCase: GetNearbyReportUseCase,
+    private getReportsByUserIdUseCase: GetReportsByUserIdUseCase,
     private likeReportUseCase: LikeReportUseCase,
     private unlikeReportUseCase: UnlikeReportUseCase,
     private getLatestReportsUseCase: GetLatestReportsUseCase,
@@ -67,6 +70,17 @@ export class ReportController {
     @Param() dto: GetReportsByCampaignIdDTO,
   ) {
     return await this.getReportByCampaignIdUseCase.execute({
+      ...dto,
+      userId: user.id,
+    });
+  }
+
+  @Get('/me')
+  async getReportsByUserId(
+    @User() user: IUserIdentity,
+    @Query() dto: GetReportsByUserIdDTO,
+  ) {
+    return await this.getReportsByUserIdUseCase.execute({
       ...dto,
       userId: user.id,
     });
